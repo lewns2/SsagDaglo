@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-import ContentHeader from '../components/ContentHeader';
+import Header from '../components/Header';
 
 import "../style/FileUploadPage.scss"
 
@@ -76,8 +76,8 @@ export const FileUploadPage = () => {
 
     return (
         <>  
-            <ContentHeader/>
-            
+            <Header/>
+            <div className="FileUploadContainer">
             {/* 업로드 타입 선택 카테고리 */}
             <h1>파일 업로드</h1>
             <div className = "uploadType">
@@ -125,6 +125,7 @@ export const FileUploadPage = () => {
 
             {/* 업로드가 성공적인 경우를 확인하고, 다음 버튼 활성화 */}
             <button onClick={()=>handleRequest()}>다음</button>
+            </div>
         </>
     )
 }

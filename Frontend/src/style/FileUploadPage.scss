@@ -1,8 +1,14 @@
-.uploadType {
-    display: flex;
+.FileUploadContainer {
+    max-width: 60vw;
+    margin: auto;
+    
+    .uploadType {
+        display: flex;
+    }
+    
+    .uploadObject {
+        width: 70vw;
+        height: 50vh;
+    }
 }
 
-.uploadObject {
-    width: 70vw;
-    height: 50vh;
-}

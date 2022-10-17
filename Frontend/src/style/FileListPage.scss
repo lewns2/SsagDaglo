@@ -1,0 +1,16 @@
+.FileListContainer {
+    max-width: 60vw;
+    margin: auto;
+
+    .FileListHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .FileListTool {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
