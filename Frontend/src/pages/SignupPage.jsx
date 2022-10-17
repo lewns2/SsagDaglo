@@ -1,5 +1,6 @@
 // import { useState, useEffect } from 'react';
 // import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ContentHeader from '../components/ContentHeader';
 
 export const SignupPage = () => {
@@ -25,7 +26,9 @@ export const SignupPage = () => {
                 </div>
 
                 <button>회원 가입</button>
-                <p>이미 계정이 있나요? 로그인하러 가기</p>
+                <Link to="/login">
+                    <p>이미 계정이 있나요? 로그인하러 가기</p>
+                </Link>
             </div>
         </>
     )
