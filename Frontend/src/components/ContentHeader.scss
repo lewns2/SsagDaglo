@@ -1,0 +1,16 @@
+.cotentheader {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+
+    .prevBtn {
+        width: 70px;
+        height: 70px;
+        background-color: skyblue;
+        cursor: pointer;
+    }
+}
