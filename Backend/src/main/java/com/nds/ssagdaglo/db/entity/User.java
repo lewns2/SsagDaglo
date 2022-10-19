@@ -8,27 +8,30 @@ import javax.validation.constraints.Email;
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
-                        columnNames = {"user_email"}
+                        columnNames = {"email"}
                 )
         }
 )
 
 @Setter
 @Getter
-@Entity
+@Entity(name = "user")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class User {
     @Id
     @Email
-    @Column(name = "user_email", length = 100, nullable = false)
+    @Column(name = "email", length = 100, nullable = false)
     String userEmail;
 
-    @Column(name = "user_nickname", length = 60, nullable = false)
+    @Column(name = "nickname", length = 60, nullable = false)
     String userNickName;
 
-    @Column(name = "user_password", length = 200, nullable = false)
+    @Column(name = "password", length = 200, nullable = false)
     String userPassword;
 
 }
+
+
