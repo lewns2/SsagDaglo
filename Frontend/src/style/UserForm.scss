@@ -1,0 +1,56 @@
+.UserForm {
+    max-width: 50%;
+    margin: auto;
+    
+    .UserFormSubTitle {
+        display: flex;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .UserFormSubTitle1 {
+        display: flex;
+        font-size: 20px;
+        font-weight: bold;
+        justify-content: center;
+    }
+
+    .UserFormWrapper {
+        max-width: 90%;
+        margin: auto;
+
+        .UserInputWrapper {
+            display: grid;
+            grid-template-columns: 30% 70%;
+            justify-items: start;
+            align-items: center;
+            margin-top: 40px;
+        }
+    
+        .UserInputText {
+            width: 100%;
+            height: 40px;
+        }
+    }
+
+    .UserFormSubmitBtn {
+        width: 100%;
+        height: 40px;
+        margin-top: 40px;
+        border-radius: 5px;
+        background-color: #fdf9f9;
+        border: none;
+        cursor: pointer;
+    }
+
+    .error {
+        display: flex;
+        flex-direction: row-reverse;
+        padding: 2px;
+        color: red;
+    }
+
+
+}
+
+
