@@ -13,22 +13,33 @@ public class UserController {
     UserService userService;
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String signUp(
+    public boolean signUp(
             @RequestBody User user
     ) {
         userService.signUpUser(user);
 //        return user;
-        return "SignUp!";
+        return true;
     }
 
     @CrossOrigin(origins="*", allowedHeaders = "*")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public boolean signIn(
+    public String signIn(
             @RequestBody User user
     ) {
-        if(userService.signIn(user))
-            return true;
-        else
-            return false;
+        return userService.signIn(user);
+    }
+
+    @PostMapping(value = "/chknickname")
+    public boolean checkNickName(
+            @RequestBody User user
+    ) {
+        return userService.checkNickName(user);
+    }
+
+    @RequestMapping(value = "/chkemail", method = RequestMethod.POST)
+    public boolean checkEmail(
+            @RequestBody User user
+    ) {
+        return userService.checkEmail(user);
     }
 }
