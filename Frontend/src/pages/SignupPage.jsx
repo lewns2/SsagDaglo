@@ -1,22 +1,76 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { json, Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import Header from '../components/Header';
 import ContentHeader from '../components/ContentHeader';
 import * as useFetchUser from '../apis/FetchUser';
+import Alert from '../components/Alert';
 
 import "../style/UserForm.scss";
 
 
 export const SignupPage = () => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const navigate = useNavigate();
 
+    const { register, handleSubmit, formState: { errors }, getValues } = useForm();
+    const [isSuccessSignUp, setIsSuccessSignUp] = useState();
+    const [isCheckedNickName, setIsCheckedNickName] = useState('false');
+    const [isCheckedEmail, setIsCheckedEmail] = useState('false');
+
+    // 회원 가입 양식 제출
     const onSubmit = (data) => {
-        console.log(data, errors);
-        useFetchUser.reqSignup(data);
+        if(isCheckedNickName === 'false') {
+            Alert(false, '닉네임 중복 확인을 해주세요.')
+        }
+        else if(isCheckedEmail === 'false') {
+            Alert(false, '이메일 중복 확인을 해주세요')
+        }
+        else {
+            let response = useFetchUser.reqSignup(data);
+            response.then((res) => { 
+                {setIsSuccessSignUp(`${res}`)}
+                `${res}` === 'true' ? Alert(true, '회원 가입 성공'): Alert(false, '회원 가입 실패')
+            })
+        }
     }
+
+    // 중복 확인 : 1. 닉네임, 2. 이메일
+    const handleDoubleCheck = (type) => {
+        const values = getValues();
+        
+        if(type === "nickName") {
+            if(values.userNickName === "") {
+                Alert(false, '닉네임을 입력해주세요');
+            }
+            else {
+                let res = useFetchUser.reqCheckNickName(JSON.stringify({userNickName : values.userNickName}));
+                res.then((res) => {
+                    setIsCheckedNickName(`${res}`);
+                    `${res}` === 'true' ? Alert(true, '사용 가능한 닉네임입니다.') : Alert(false, '중복된 닉네임이 존재합니다.')
+                })
+            }
+        }
+        if(type === 'email') {
+            if(values.userEmail === "") {
+                Alert(false, '이메일을 입력해주세요')
+            }
+            else {
+                let res = useFetchUser.reqCheckEmail(JSON.stringify({userEmail : values.userEmail}));
+                res.then((res) => {
+                    setIsCheckedEmail(`${res}`);
+                    `${res}` === 'true' ? Alert(true, '사용 가능한 이메일입니다.'): Alert(false, '중복된 이메일이 존재합니다.')
+                })
+            }
+        }
+    }
+
+    useEffect(() => {
+        if(isSuccessSignUp) {
+            navigate('/login');
+        }
+    }, [isSuccessSignUp]);
 
     return (
         <>  
@@ -35,11 +89,12 @@ export const SignupPage = () => {
                             message: "닉네임을 입력해주세요" 
                         },
                         minLength: {
-                            value: 2,
-                            message: "닉네임은 최소 2자 이상으로 작성해주세요"
+                            value: 3,
+                            message: "닉네임은 최소 3자 이상으로 작성해주세요"
                         }
                         
                     })} placeholder="닉네임" />
+                    <button type="button" onClick={() => handleDoubleCheck('nickName')}>중복 확인</button>
                 </div>
                 {errors.userNickName && (<div className="error">{errors.userNickName.message}</div>)}
                 
@@ -57,6 +112,7 @@ export const SignupPage = () => {
                             }
                         })} 
                         placeholder="이메일" />
+                    <button type="button" onClick={() => handleDoubleCheck('email')}>중복 확인</button>
                 </div>
                 {errors.userEmail && (<div className="error">{errors.userEmail.message}</div>)}
                 

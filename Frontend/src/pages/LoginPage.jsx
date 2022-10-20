@@ -1,20 +1,37 @@
-import {Link} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import {Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 
 import Header from '../components/Header';
 import ContentHeader from '../components/ContentHeader';
 import * as useFetchUser from '../apis/FetchUser';
+import Alert from '../components/Alert';
 
 import "../style/UserForm.scss";
 
 export const LoginPage = () => {
 
+    const navigate = useNavigate();
+
+    const [isSuccessLogin, setIsSuccessLogin] = useState();
     const { register, handleSubmit, formState: { errors }, } = useForm();
 
+    // 로그인 양식 제출
     const onSubmit = (data) => {
         console.log(data);
-        useFetchUser.reqLogin(data);
+        let response = useFetchUser.reqLogin(data);
+        response.then((res) => {
+            console.log(`${res}`)
+            {setIsSuccessLogin(`${res}`)}
+            `${res}` === 'false' ? Alert(false, '실패') : Alert(true, '성공')
+        })
     } 
+
+    useEffect(() => {
+        // if(isSuccessLogin !== 'false') {
+        //     navigate('/list');
+        // }
+    }, [isSuccessLogin]);
     
     return (
         <>

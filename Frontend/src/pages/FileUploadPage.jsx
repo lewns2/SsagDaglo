@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 import Header from '../components/Header';
+import * as useFetchAudio from '../apis/FetchAudio';
 
 import "../style/FileUploadPage.scss"
 
@@ -10,7 +11,7 @@ export const FileUploadPage = () => {
     const REACT_APP_YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 
     const [selectedUploadType, setSelectedUploadType] = useState('file');
-    const [givenAudio, setGivenAudio] = useState();
+    const [uploadAudio, setUploadAudio] = useState();
     const [isVisible, setIsVisible] = useState(false);
     const [givenYoutubeLink, setGivenYoutubeLink] = useState('');
 
@@ -18,14 +19,14 @@ export const FileUploadPage = () => {
         if(type === 'file') setSelectedUploadType('file')
         else if(type === 'link') {
             setSelectedUploadType('link');
-            setGivenAudio('');
+            setUploadAudio('');
             setIsVisible(false);   
         }
     }
 
     const onChangeAudio = (e) => {
         if(e.target.files[0]) {
-            setGivenAudio(URL.createObjectURL(e.target.files[0]));
+            setUploadAudio(URL.createObjectURL(e.target.files[0]));
             setIsVisible(true);
         }
     }
@@ -35,8 +36,8 @@ export const FileUploadPage = () => {
     }
 
     const handlePlay = (isPlay) => {
-        let playAudio = new Audio(givenAudio);
-        if(givenAudio && isPlay) {
+        let playAudio = new Audio(uploadAudio);
+        if(uploadAudio && isPlay) {
             playAudio.play();
         }
         else {
@@ -48,8 +49,19 @@ export const FileUploadPage = () => {
     const handleRequest = () => {
         console.log(selectedUploadType)
         if(selectedUploadType === 'file') {
-            // 파일 axios 요청 + 요청 보낼 파일이 없으면 다음 비활성화
-            console.log(givenAudio)
+            // 오디오 form data 생성 및 axios 요청 + 요청 보낼 파일이 없으면 다음 비활성화
+            console.log("여기여기여기", uploadAudio)
+            const formData = new FormData();
+            // formData.append(
+            //     'key',
+            //     new Blob([JSON.stringify({'userNickname' : 'test'})], {
+            //     type: 'application/json',
+            //     }),
+            // );
+            formData.append('file', uploadAudio);
+            console.log(formData);
+            for (const keyValue of formData) console.log(keyValue); 
+            useFetchAudio.reqUploadAudio(formData);
         }
         else if(selectedUploadType === 'link') {
             // 유튜브 axios 요청 + 유효성 검사 필요
@@ -68,9 +80,9 @@ export const FileUploadPage = () => {
 
     useEffect(() => {
         // console.log(selectedUploadType);
-        // console.log(givenAudio);
+        console.log(uploadAudio);
         // console.log(givenYoutubeLink);
-    }, [selectedUploadType, givenAudio, givenYoutubeLink])
+    }, [selectedUploadType, uploadAudio, givenYoutubeLink])
 
     
 
