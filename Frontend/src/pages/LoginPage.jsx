@@ -13,10 +13,10 @@ export const LoginPage = () => {
 
     const navigate = useNavigate();
 
-    const [isSuccessLogin, setIsSuccessLogin] = useState();
+    const [isSuccessLogin, setIsSuccessLogin] = useState('false');
     const { register, handleSubmit, formState: { errors }, } = useForm();
 
-    // 로그인 양식 제출
+    // [기능 1] 로그인 양식 제출
     const onSubmit = (data) => {
         console.log(data);
         let response = useFetchUser.reqLogin(data);
@@ -27,10 +27,11 @@ export const LoginPage = () => {
         })
     } 
 
+    // [기능 2] 로그인 완료 시, 파일 리스트 목록으로 이동 
     useEffect(() => {
-        // if(isSuccessLogin !== 'false') {
-        //     navigate('/list');
-        // }
+        if(isSuccessLogin !== 'false') {
+            navigate('/list');
+        }
     }, [isSuccessLogin]);
     
     return (
@@ -55,21 +56,16 @@ export const LoginPage = () => {
                             {...register("userPassword")}
                         />
                     </div>
+                    <div className='FindUserInfo'>
+                        <p className='underline-hover-btn' style={{cursor:'pointer'}}>아이디 찾기</p>
+                        <p className='underline-hover-btn' style={{cursor:'pointer'}}>비밀번호 찾기</p>
+                    </div>
                     
-                    <p>아이디 찾기</p>
-                    <p>비밀번호 찾기</p>
-                    
-                    <button type="submit" className='UserFormSubmitBtn'>로그인</button>
+                    <button type="submit" className='UserFormSubmitBtn'><p id="innerfont">로그인</p></button>
                 </form>
-                
             </div>
-            
-            <div>
-                <Link to="/signup" className='UserFormSubmitBtn'>
-                    회원가입
-                </Link>
-            </div>
-            
+            <p onClick={() => navigate('/signup')} style={{cursor: 'pointer', textDecoration: 'underline'}}>처음이신가요? 회원가입 하러가기</p>
+            <p style={{color: 'gray'}}>싹다글로 서비스 이용을 위해, 별도 회원가입이 필요합니다.</p>
         </>
     )
 }

@@ -1,10 +1,12 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 import Header from '../components/Header';
 
 import '../style/StartPage.scss'
 
 export const StartPage = () => {
+    const navigate = useNavigate();
+
     return (
         <div className='container'>  
             <Header/>
@@ -22,11 +24,7 @@ export const StartPage = () => {
             </div>
 
             <div className="servicestart">
-                <Link to="/list">
-                    <button id="startBtn">
-                    시작하기
-                    </button>
-                </Link>
+                <p onClick={() => navigate('/list')} id="startBtn">시작하기</p>
             </div>
             
         </div>

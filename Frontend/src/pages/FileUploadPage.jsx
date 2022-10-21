@@ -15,6 +15,7 @@ export const FileUploadPage = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [givenYoutubeLink, setGivenYoutubeLink] = useState('');
 
+    // [UX] 카테고리 선택에 따라 보여줄 화면을 핸들링할 데이터 
     const clickTypeButton = (type) => {
         if(type === 'file') setSelectedUploadType('file')
         else if(type === 'link') {
@@ -24,9 +25,10 @@ export const FileUploadPage = () => {
         }
     }
 
+    // [기능 / UX] 업로드 파일, 변수에 저장 및 음악 재생 기능
     const onChangeAudio = (e) => {
         if(e.target.files[0]) {
-            setUploadAudio(URL.createObjectURL(e.target.files[0]));
+            setUploadAudio(e.target.files[0]);
             setIsVisible(true);
         }
     }
@@ -46,11 +48,11 @@ export const FileUploadPage = () => {
         }
     }
 
+    // [기능] 파일 업로드 후, 요청 시 서버에 보내줄 form 형태 변환 및 API 요청
     const handleRequest = () => {
         console.log(selectedUploadType)
         if(selectedUploadType === 'file') {
             // 오디오 form data 생성 및 axios 요청 + 요청 보낼 파일이 없으면 다음 비활성화
-            console.log("여기여기여기", uploadAudio)
             const formData = new FormData();
             // formData.append(
             //     'key',

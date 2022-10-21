@@ -14,11 +14,14 @@
 }
 
 .servicestart {
+    
+    display: flex;
+    justify-content: center;
+
     #startBtn {
-        height: 30px;
         font-size: 16px;
-        background-color: #FFA5A5;
-        border: 1px solid #FFA5A5;
+        background-color: #FFF0EF;;
+        border: 1px solid #FFF0EF;;
         border-radius: 8px;
         text-align: center;
         cursor: pointer;
