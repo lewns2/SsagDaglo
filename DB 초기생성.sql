@@ -1,10 +1,10 @@
-CREATE TABLE `User` (
+﻿CREATE TABLE `user` (
 	`email`	VARCHAR(30)	NOT NULL	COMMENT '이메일(기본키)',
 	`password`	VARCHAR(50)	NULL,
 	`nickname`	VARCHAR(10)	NULL
 );
 
-CREATE TABLE `Storage` (
+CREATE TABLE `storage` (
 	`no`	INT(10)	NOT NULL,
 	`email`	VARCHAR(30)	NOT NULL	COMMENT '이메일(기본키)',
 	`category_no`	INT	NULL,
@@ -16,37 +16,37 @@ CREATE TABLE `Storage` (
 	`update_date`	DATETIME	NULL
 );
 
-CREATE TABLE `Category` (
+CREATE TABLE `category` (
 	`no`	INT(10)	NOT NULL,
 	`email`	VARCHAR(30)	NOT NULL	COMMENT '이메일(기본키)',
 	`category_name`	VARCHAR(15)	NULL
 );
 
-ALTER TABLE `User` ADD CONSTRAINT `PK_USER` PRIMARY KEY (
+ALTER TABLE `user` ADD CONSTRAINT `PK_USER` PRIMARY KEY (
 	`email`
 );
 
-ALTER TABLE `Storage` ADD CONSTRAINT `PK_STORAGE` PRIMARY KEY (
+ALTER TABLE `storage` ADD CONSTRAINT `PK_STORAGE` PRIMARY KEY (
 	`no`,
 	`email`
 );
 
-ALTER TABLE `Category` ADD CONSTRAINT `PK_CATEGORY` PRIMARY KEY (
+ALTER TABLE `category` ADD CONSTRAINT `PK_CATEGORY` PRIMARY KEY (
 	`no`,
 	`email`
 );
 
-ALTER TABLE `Storage` ADD CONSTRAINT `FK_User_TO_Storage_1` FOREIGN KEY (
+ALTER TABLE `storage` ADD CONSTRAINT `FK_user_TO_storage_1` FOREIGN KEY (
 	`email`
 )
-REFERENCES `User` (
+REFERENCES `user` (
 	`email`
 );
 
-ALTER TABLE `Category` ADD CONSTRAINT `FK_User_TO_Category_1` FOREIGN KEY (
+ALTER TABLE `category` ADD CONSTRAINT `FK_user_TO_category_1` FOREIGN KEY (
 	`email`
 )
-REFERENCES `User` (
+REFERENCES `user` (
 	`email`
 );
 

@@ -37,11 +37,11 @@ public class FileController {
     @PostMapping(value = "/upload")
     public String upload(
 //            @RequestParam MultipartFile[] uploadfile,
-            @RequestPart(value = "file", required = false) MultipartFile file,
-            Model model
+            @RequestPart(value = "file", required = false) MultipartFile file
+//            Model model
             ) throws IllegalStateException, IOException
     {
-        List<FileDto> list = new ArrayList<>();
+//        List<FileDto> list = new ArrayList<>();
 //        for (MultipartFile file : uploadfile) {
 //            if (!file.isEmpty()) {
 //                // UUID를 이용해서 unique한 파일 이름 생성
@@ -57,20 +57,24 @@ public class FileController {
 //            }
 //
 //        }
-
-        if (!file.isEmpty()) {
+        System.out.println(file != null);
+//        if (!file.isEmpty()) {
+        if (file != null) {
             // UUID를 이용해서 unique한 파일 이름 생성
             FileDto dto = new FileDto(UUID.randomUUID().toString(),
                     file.getOriginalFilename(),
                     file.getContentType());
-            list.add(dto);
+//            list.add(dto);
 
             File newFileName = new File(dto.getUuid() + "_" + dto.getFileName());
 
             // 전달된 내용을 실제 파일로 저장
             file.transferTo(newFileName);
         }
-        model.addAttribute("files", list);
+
+
+
+//        model.addAttribute("files", list);
         return "result";
     }
 
