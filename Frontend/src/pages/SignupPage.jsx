@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { json, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import Header from '../components/Header';
@@ -19,7 +19,7 @@ export const SignupPage = () => {
     const [isCheckedNickName, setIsCheckedNickName] = useState('false');
     const [isCheckedEmail, setIsCheckedEmail] = useState('false');
 
-    // 회원 가입 양식 제출
+    // [기능 1] 회원 가입 양식 제출
     const onSubmit = (data) => {
         if(isCheckedNickName === 'false') {
             Alert(false, '닉네임 중복 확인을 해주세요.')
@@ -36,7 +36,7 @@ export const SignupPage = () => {
         }
     }
 
-    // 중복 확인 : 1. 닉네임, 2. 이메일
+    // [기능 2] 중복 확인 : 1. 닉네임, 2. 이메일
     const handleDoubleCheck = (type) => {
         const values = getValues();
         
@@ -66,6 +66,7 @@ export const SignupPage = () => {
         }
     }
 
+    // [기능 3] 회원가입 완료 시, 로그인 페이지로 이동
     useEffect(() => {
         if(isSuccessSignUp) {
             navigate('/login');
@@ -82,7 +83,7 @@ export const SignupPage = () => {
 
             <form className='UserFormWrapper' onSubmit={handleSubmit(onSubmit)}>
                 <div className='UserInputWrapper'>
-                    <label>닉네임</label>
+                    <label id="Top3">닉네임</label>
                     <input className='UserInputText' id="userNickName" {...register("userNickName", {
                         required: { 
                             value: true, 
@@ -94,12 +95,12 @@ export const SignupPage = () => {
                         }
                         
                     })} placeholder="닉네임" />
-                    <button type="button" onClick={() => handleDoubleCheck('nickName')}>중복 확인</button>
+                    <p className='underline-hover-btn' onClick={() => handleDoubleCheck('nickName')}>중복 확인</p>
                 </div>
                 {errors.userNickName && (<div className="error">{errors.userNickName.message}</div>)}
                 
                 <div className='UserInputWrapper'>
-                    <label>이메일</label>
+                    <label id="Top3">이메일</label>
                     <input className='UserInputText' {...register("userEmail", {
                             required: { 
                                 value: true, 
@@ -112,12 +113,12 @@ export const SignupPage = () => {
                             }
                         })} 
                         placeholder="이메일" />
-                    <button type="button" onClick={() => handleDoubleCheck('email')}>중복 확인</button>
+                        <p className='underline-hover-btn' onClick={() => handleDoubleCheck('email')}>중복 확인</p>
                 </div>
                 {errors.userEmail && (<div className="error">{errors.userEmail.message}</div>)}
                 
                 <div className='UserInputWrapper'>
-                    <label>비밀번호</label>
+                    <label id="Top3">비밀번호</label>
                     <input className='UserInputText' type='password' {...register("userPassword", {
                         required: { 
                             value: true, 
@@ -128,16 +129,15 @@ export const SignupPage = () => {
                 {errors.userPassword && (<div className="error">{errors.userPassword.message}</div>)}
 
                 <div className='UserInputWrapper'>
-                    <label>비밀번호 확인</label>
+                    <label id="Top3">비밀번호 확인</label>
                     <input className='UserInputText' type='password' placeholder="비밀번호 확인" />
                 </div>
                 
-                <button className='UserFormSubmitBtn'><p>가입하기</p></button>
+                <button className='UserFormSubmitBtn'><p id="innerfont">가입하기</p></button>
             </form> 
 
-            <Link to="/login">
-                <p>이미 계정이 있나요? 로그인하러 가기</p>
-            </Link>
+            <p onClick={() => navigate('/login')} style={{cursor: 'pointer', textDecoration: 'underline'}}>이미 계정이 있나요? 로그인하러 가기</p>
+            
             </div>
         </>
     )

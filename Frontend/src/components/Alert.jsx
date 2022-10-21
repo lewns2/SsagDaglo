@@ -1,5 +1,6 @@
 import Swal from "sweetalert2"
 
+// 프로젝트에 사용되는 알림창 컴포넌트
 export const Alert = (isTrue, message) => {
     if(isTrue === true) {
         Swal.fire({
@@ -14,7 +15,6 @@ export const Alert = (isTrue, message) => {
             icon: 'error',
             title: 'Oops...',
             text: `${message}`,
-            // footer: '<a href="">Why do I have this issue?</a>'
         })
     }
 }

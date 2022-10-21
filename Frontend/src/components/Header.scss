@@ -4,5 +4,43 @@
     align-items: center;
     max-width: 75%;
     margin: auto;
-    padding: 40px;
+    padding: 15px;
+    margin-bottom: 40px;
+    margin-top: 15px;
+    border-bottom: 0.1px solid #ffc1ca;
+
+    .navMenu {
+        display: flex;
+        gap: 20px;
+        .underline-hover-btn{
+              cursor: pointer;
+              color: gray;
+              font-weight: bolder;
+              font-size: 0.9rem;
+              position: relative;
+            &:hover{
+                color: gray;
+                &:before{
+                    transform: none;
+                    opacity: 1;
+                    transition-duration: .4s;
+                }
+                
+            }
+        
+            &:before{
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                left: 0;
+                bottom: -0px;
+                background: lighten(gray, 20%);
+                transform: translateY(6px);
+                opacity: 0;
+                transition: 1.8s cubic-bezier(.2,1,.3,1);
+                pointer-events: none;
+            }
+        }
+    }
 }
