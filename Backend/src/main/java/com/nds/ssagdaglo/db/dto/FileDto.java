@@ -1,4 +1,4 @@
-package com.nds.ssagdaglo.api.request;
+package com.nds.ssagdaglo.db.dto;
 
 import lombok.Builder;
 import lombok.Getter;

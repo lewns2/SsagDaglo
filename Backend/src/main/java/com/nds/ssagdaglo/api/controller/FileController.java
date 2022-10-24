@@ -1,9 +1,6 @@
 package com.nds.ssagdaglo.api.controller;
 
-import com.nds.ssagdaglo.api.request.FileDto;
-import com.nds.ssagdaglo.api.service.UserService;
-import com.nds.ssagdaglo.db.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.nds.ssagdaglo.db.dto.FileDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -11,20 +8,15 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin(origins="*", allowedHeaders = "*")
