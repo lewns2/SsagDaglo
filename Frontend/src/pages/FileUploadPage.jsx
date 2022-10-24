@@ -1,19 +1,26 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Header from '../components/Header';
 import * as useFetchAudio from '../apis/FetchAudio';
+import Alert from '../components/Alert';
 
 import "../style/FileUploadPage.scss"
 
 
 export const FileUploadPage = () => {
-    const REACT_APP_YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
+
+    const navigate = useNavigate();
 
     const [selectedUploadType, setSelectedUploadType] = useState('file');
     const [uploadAudio, setUploadAudio] = useState();
     const [isVisible, setIsVisible] = useState(false);
     const [givenYoutubeLink, setGivenYoutubeLink] = useState('');
+    const [youtubeVidInfos, setYoutubeVidInfos] = useState({
+        title : '',
+        channelTitle : '',
+        thumbnails : '',
+    });
 
     // [UX] 카테고리 선택에 따라 보여줄 화면을 핸들링할 데이터 
     const clickTypeButton = (type) => {
@@ -71,20 +78,34 @@ export const FileUploadPage = () => {
         }
     }
 
-    const getYoutubeInfo = () => {
-        console.log(REACT_APP_YOUTUBE_API_KEY)
-        axios.get(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=kpop+music&key=${REACT_APP_YOUTUBE_API_KEY}`)
-        .then((res) => {
-            console.log(res);
-        })
-        .catch((err) => console.log(err));
-    }
+
+    // [기능] 유튜브 url 중 video id 파싱 및 api 요청
+    const getVideoID = () => {
+
+        if(!givenYoutubeLink) {
+            Alert(false, '비디오 링크를 입력해주세요!')
+        }
+
+        else {
+            let url = givenYoutubeLink.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+            if(url[2] !== undefined) {
+                url = url[2].split(/[^0-9a-z_-]/i)[0];
+                
+                let response = useFetchAudio.reqYoutubeInfos(url);  
+                response.then((res) => {
+                    setYoutubeVidInfos({title: res.title, channelTitle: res.channelTitle, thumbnails: res.thumbnails.standard.url });
+                })
+            }
+            else {
+                Alert(false, '올바른 비디오 링크를 입력해주세요!');
+            }    
+        }
+        
+    }   
 
     useEffect(() => {
-        // console.log(selectedUploadType);
-        console.log(uploadAudio);
-        // console.log(givenYoutubeLink);
-    }, [selectedUploadType, uploadAudio, givenYoutubeLink])
+        // console.log(youtubeVidInfos);
+    }, [selectedUploadType, uploadAudio, givenYoutubeLink, youtubeVidInfos])
 
     
 
@@ -96,17 +117,10 @@ export const FileUploadPage = () => {
             <h1>파일 업로드</h1>
             <div className = "uploadType">
                 <div>
-                    <button
-                    onClick={() => clickTypeButton('file')}
-                    >파일 업로드
-                    </button>
-                    
+                    <p onClick={() => clickTypeButton('file')}>파일 업로드</p>
                 </div>
                 <div>
-                <button
-                    onClick={() => clickTypeButton('link')}
-                    >유튜브 링크
-                    </button>
+                    <p onClick={() => clickTypeButton('link')}>유튜브 링크</p>
                 </div>
             </div>
 
@@ -121,24 +135,48 @@ export const FileUploadPage = () => {
                             <button onClick={() => handlePlay(true)}>Play</button>
                             <button onClick={() => handlePlay(false)}>Pause</button>
                         </div>
+                        <p>첨부파일은 최대 1개, 30MB까지 등록 가능합니다.</p>
                     </div>
                     
                     ) 
                         : 
                     (
+                    <>
                     <div className = "youtubeLink">
                         <input placeholder='예) www.youtube.com/watch?v=4VrNZzzOldc'
                             onChange={onChangeLink}
                         />
-                        <button onClick={() => getYoutubeInfo()}>링크 등록</button>
+                        <button onClick={() => getVideoID()}>링크 등록</button>
                     </div>
+                    
+                    <div className='youtubeResult'>
+                        { youtubeVidInfos.title !== "" ? (
+                        <>
+                            <div>
+                                <img src={youtubeVidInfos.thumbnails ? youtubeVidInfos.thumbnails : ''} alt="썸네일"></img>
+                            </div>
+                            <div>
+                                <p>제목 : {youtubeVidInfos.title ? youtubeVidInfos.title : ''}</p>
+                                <p>작성자 : {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}</p>
+                            </div>
+                        </>
+                        ) : (
+                            <div> 
+                            </div>
+                        )}
+                        
+                    </div>
+                    </>
                     )
                 }
 
             </div>
 
             {/* 업로드가 성공적인 경우를 확인하고, 다음 버튼 활성화 */}
-            <button onClick={()=>handleRequest()}>다음</button>
+            <div className='moveButtons'>
+                <p onClick={() => navigate(-1)} style={{cursor:'pointer'}}>이전</p>
+                <p onClick={()=>handleRequest()} style={{cursor:'pointer'}}>다음</p>
+            </div>
             </div>
         </>
     )

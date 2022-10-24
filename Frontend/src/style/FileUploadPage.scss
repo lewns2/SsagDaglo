@@ -4,11 +4,27 @@
     
     .uploadType {
         display: flex;
+        gap: 1.5rem;
     }
     
     .uploadObject {
-        width: 70vw;
-        height: 50vh;
+        .audioFile {
+            width: 100%;
+            cursor: pointer;
+            overflow-wrap: break-word;
+            flex-direction: column;
+            background-color: rgb(250, 250, 250);
+            height: 40vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    .moveButtons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
     }
 }
 
