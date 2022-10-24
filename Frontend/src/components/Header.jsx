@@ -1,5 +1,5 @@
 import logoImage from "../assets/logo.png"
-import {Link, useNavigate, NavLink} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import "./Header.scss";
 import { useEffect, useState } from "react";
