@@ -9,14 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        columnNames = {"email"}
-                )
-        }
-)
-
 @Setter
 @Getter
 @Entity(name = "user")
@@ -28,14 +20,12 @@ import java.util.List;
 public class User {
     @Id
     @Email
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "email", length = 100, nullable = false)
     private String userEmail;
 
     @Column(name = "nickname", length = 60, nullable = false)
     private String userNickName;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password", length = 200, nullable = false)
     private String userPassword;
 

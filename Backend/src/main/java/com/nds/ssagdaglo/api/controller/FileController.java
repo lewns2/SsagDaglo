@@ -1,9 +1,11 @@
 package com.nds.ssagdaglo.api.controller;
 
 
+import com.nds.ssagdaglo.api.dto.FileDto;
 import com.nds.ssagdaglo.api.service.FileService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,20 +20,22 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestPart(value = "key") String userNickName, @RequestPart("file") MultipartFile file) throws IOException {
+    public String uploadFile(@RequestPart(value = "key")FileDto.FileResisterReq userNickname, @RequestPart("file") MultipartFile file) throws IOException {
+        System.out.println(userNickname.getUserNickname());
 
         try {
-            System.out.print("request NickName : " );
-            System.out.println(userNickName);
-            System.out.print("request File : ");
-            System.out.println(file);
-            fileService.saveFile(file);
+            fileService.saveFile(file, userNickname.getUserNickname());
         }
-        catch (Exception E) {
-            E.printStackTrace();
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
         return "에라 모르겠다.";
     }
+
+//    @ControllerAdvice
+//    public ResponseEntity<?> responseException() {
+//        return ResponseEntity.notFound().;
+//    }
 
 }

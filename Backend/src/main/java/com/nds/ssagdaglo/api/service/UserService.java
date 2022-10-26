@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 //import javax.jws.soap.SOAPBinding;
-import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -45,25 +44,24 @@ public class UserService {
             return "false";
         }
         System.out.println("[LOG] 로그인 성공! - " + user.getUserEmail());
-        return userRepository.findNiknameByUserEmail(user.getUserEmail()).get(0).getUserNickName(); // 위의 2가지가 아닌 경우
+        return userRepository.findNicknameByUserEmail(user.getUserEmail()).get(0).getUserNickName(); // 위의 2가지가 아닌 경우
     }
     
     public boolean checkNickName(User user) {
         // 닉네임 중복 체크
 //        System.out.println("list에 저장된 값: " + user.toString());
-        List<User> nickNameList = userRepository.findAllByUserNickName(user.getUserNickName());
+        User nickNameList = userRepository.findByUserNickName(user.getUserNickName()).orElseThrow(
+                () -> new IllegalArgumentException("")
+        );
 //        System.out.println(nickNameList.size()); // size가 1인 경우 중복
 //        nickNameList.get(0).getUserNickName()
-        if(nickNameList.size() >= 1) {
-            // 중복이면 false
-            System.out.println("[LOG] 닉네임 중복! - " + user.getUserNickName());
-            return false;
-        }
+//        if(nickNameList.size() >= 1) {
+//            // 중복이면 false
+//            System.out.println("[LOG] 닉네임 중복! - " + user.getUserNickName());
+//            return false;
+//        }
 
-        else {
-            System.out.println("[LOG] 닉네임 중복아님! - " + user.getUserNickName());
-            return true; // 중복이 아니면 true
-        }
+        return true; // 중복이 아니면 true
 
     }
 
@@ -71,17 +69,20 @@ public class UserService {
 //        System.out.println("list에 저장된 값: " + user.toString());
 
         // 이메일 중복 체크
-        List<User> emailList = userRepository.findAllByUserEmail(user.getUserEmail());
+//        User user = userRepository.findById(user.getUserEmail());
+        if(userRepository.findById(user.getUserEmail()).isPresent())
+            return false;
 //        System.out.println(emailList.size()); // size가 1인 경우 중복
 
-        if(emailList.size() >= 1) {
-            System.out.println("[LOG] 이메일 중복! - " + user.getUserEmail());
-            return false;// 중복이면 false
-        }
-        else {
-            System.out.println("[LOG] 이메일 중복아님! - " + user.getUserEmail());
-            return true; // 중복이 아니면 true
-        }
+//        if(emailList.size() >= 1) {
+//            System.out.println("[LOG] 이메일 중복! - " + user.getUserEmail());
+//            return false;// 중복이면 false
+//        }
+//        else {
+//            System.out.println("[LOG] 이메일 중복아님! - " + user.getUserEmail());
+//            return true; // 중복이 아니면 true
+//        }
 
+        return true;
     }
 }
