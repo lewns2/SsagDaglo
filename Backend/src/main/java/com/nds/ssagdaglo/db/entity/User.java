@@ -5,15 +5,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.ArrayList;
 import java.util.Collection;
-
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        columnNames = {"email"}
-                )
-        }
-)
+import java.util.List;
 
 @Setter
 @Getter
@@ -26,14 +20,12 @@ import java.util.Collection;
 public class User {
     @Id
     @Email
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "email", length = 100, nullable = false)
     private String userEmail;
 
     @Column(name = "nickname", length = 60, nullable = false)
     private String userNickName;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password", length = 200, nullable = false)
     private String userPassword;
 

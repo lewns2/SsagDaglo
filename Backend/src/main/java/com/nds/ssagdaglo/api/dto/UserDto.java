@@ -1,7 +1,6 @@
-package com.nds.ssagdaglo.db.dto;
+package com.nds.ssagdaglo.api.dto;
 
 import com.nds.ssagdaglo.db.entity.User;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

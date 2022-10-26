@@ -61,12 +61,12 @@ export const FileUploadPage = () => {
         if(selectedUploadType === 'file') {
             // 오디오 form data 생성 및 axios 요청 + 요청 보낼 파일이 없으면 다음 비활성화
             const formData = new FormData();
-            // formData.append(
-            //     'key',
-            //     new Blob([JSON.stringify({'userNickname' : 'test'})], {
-            //     type: 'application/json',
-            //     }),
-            // );
+            formData.append(
+                'key',
+                new Blob([JSON.stringify({'userNickname' : sessionStorage.getItem('userNickName')})], {
+                type: 'application/json',
+                }),
+            );
             formData.append('file', uploadAudio);
             console.log(formData);
             for (const keyValue of formData) console.log(keyValue); 
