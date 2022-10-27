@@ -18,6 +18,13 @@ import java.util.List;
 @ToString
 //@Table
 public class User {
+//    // 기본 생성자 추가
+//    public User(String userEmail, String userNickName, String userPassword) {
+//        this.userEmail = userEmail;
+//        this.userNickName = userNickName;
+//        this.userPassword = userPassword;
+//    }
+
     @Id
     @Email
     @Column(name = "email", length = 100, nullable = false)
