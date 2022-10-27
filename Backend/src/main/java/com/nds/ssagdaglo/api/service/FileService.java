@@ -1,6 +1,8 @@
 package com.nds.ssagdaglo.api.service;
 
+import com.nds.ssagdaglo.api.dto.FileDto;
 import com.nds.ssagdaglo.db.entity.FileEntity;
+import com.nds.ssagdaglo.db.entity.User;
 import com.nds.ssagdaglo.db.repository.FileRepository;
 import com.nds.ssagdaglo.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 @RequiredArgsConstructor
 @Service
@@ -20,12 +26,11 @@ public class FileService {
     private String fileDir;
 
     private final FileRepository fileRepository;
-
     private final UserRepository userRepository;
-    // 닉네임을 통해 유저 이메일 찾아 저장하기
 
+    // 업로드된 파일을 저장하는 함수
     @Transactional(rollbackFor = Exception.class)
-    public Integer saveFile(MultipartFile file, String userNickName) throws IOException {
+    public Long saveFile(MultipartFile file, String userNickName) throws IOException {
         if(file == null) {
             return null;
         }
@@ -40,12 +45,6 @@ public class FileService {
 
         String savedPath = fileDir + savedName;
 
-
-
-        // 생성 날짜, 수정 날짜
-//        LocalDate localCreateDate = LocalDate.now();
-//        LocalDate localUpdateDate = LocalDate.now();
-
         FileEntity fileEntity = FileEntity.builder()
                 .originPath(savedPath)
                 .filename(originName)
@@ -58,8 +57,22 @@ public class FileService {
 
         FileEntity savedFileEntity = fileRepository.save(fileEntity);
 
-
         return savedFileEntity.getFileNo();
     }
 
+    // 사용자의 파일 목록을 조회하는 함수
+    public List<String> getUserFileList(String userNickName) {
+        List<String> data = new ArrayList<>();
+
+        User user = userRepository.findByUserNickName(userNickName).get();
+
+        List<FileEntity> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail());
+
+        for(int i=0; i<fileEntityRes.size(); i++) {
+            String userFileName = fileEntityRes.get(i).getFilename();
+            data.add(userFileName);
+        }
+
+        return data;
+    }
 }

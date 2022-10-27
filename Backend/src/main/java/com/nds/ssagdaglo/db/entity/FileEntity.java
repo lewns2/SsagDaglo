@@ -1,8 +1,6 @@
 package com.nds.ssagdaglo.db.entity;
 
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.dialect.JDataStoreDialect;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,6 +11,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 @ToString
 @Table(name="storage")
 @Entity(name="file")
@@ -21,13 +23,11 @@ public class FileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="no")
-    private Integer fileNo;
+    private Long fileNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email")
     private User user;
-//    @Column(length = 100, nullable = false)
-//    private String email;
 
     @Column
     private Integer categoryNo;
@@ -50,7 +50,7 @@ public class FileEntity {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
-    public Integer getFileNo() {
+    public Long getFileNo() {
         return this.fileNo;
     }
 }

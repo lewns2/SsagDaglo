@@ -1,12 +1,20 @@
 // import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
+import * as useFetchFiles from "../apis/FetchFiles";
 
 import "../style/FileListPage.scss"
+import { useEffect } from 'react';
 
 export const FileListPage = () => {
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        let userNickName = sessionStorage.getItem('userNickName');
+        useFetchFiles.reqFiles(userNickName);
+    }, []);
+    
 
     return (
         <>

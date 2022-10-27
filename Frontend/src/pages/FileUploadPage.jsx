@@ -55,11 +55,11 @@ export const FileUploadPage = () => {
         }
     }
 
-    // [기능] 파일 업로드 후, 요청 시 서버에 보내줄 form 형태 변환 및 API 요청
+    // [기능] 파일 업로드 후, 요청 시 서버에 보내줄 form 형태 변환 및 API 요청 / [다음] 버튼 클릭
     const handleRequest = () => {
-        console.log(selectedUploadType)
+
+        // 음성 파일 업로드
         if(selectedUploadType === 'file') {
-            // 오디오 form data 생성 및 axios 요청 + 요청 보낼 파일이 없으면 다음 비활성화
             const formData = new FormData();
             formData.append(
                 'key',
@@ -70,10 +70,12 @@ export const FileUploadPage = () => {
             formData.append('file', uploadAudio);
             console.log(formData);
             for (const keyValue of formData) console.log(keyValue); 
-            useFetchAudio.reqUploadAudio(formData);
+            let response = useFetchAudio.reqUploadAudio(formData);
+            response.then((res) => {if(res === 200) navigate('/list')});
         }
+        
+        // 유튜브 링크 전송
         else if(selectedUploadType === 'link') {
-            // 유튜브 axios 요청 + 유효성 검사 필요
             console.log(givenYoutubeLink)
         }
     }
@@ -100,8 +102,8 @@ export const FileUploadPage = () => {
                 Alert(false, '올바른 비디오 링크를 입력해주세요!');
             }    
         }
-        
     }   
+
 
     useEffect(() => {
         // console.log(youtubeVidInfos);

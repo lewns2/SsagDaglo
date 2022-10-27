@@ -7,10 +7,17 @@ const header = { headers: { 'Content-Type': 'multipart/form-data' }};
 
 // 1. 오디오 파일 업로드 요청 API
 const reqUploadAudio = async (data) => {
+
+    let result = null;
+
     try {   
           await axios.post(`${baseURL}/upload`, data, header)
-          .then((res) => console.log(res))
-          .catch((err)=> console.log(err));
+          .then((res) => {
+            result = res.status
+            })
+
+            return result;
+
     } catch (error) {
         console.log("오디오 요청 에러 : ", error);
         return error;
