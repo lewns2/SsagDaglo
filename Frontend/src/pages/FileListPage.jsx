@@ -19,11 +19,6 @@ export const FileListPage = () => {
         })
     }, []);
 
-    const testApi = () => {
-        useFetchFiles.reqTest();
-    }
-    
-
     return (
         <>
             <Header/>
