@@ -6,8 +6,10 @@ import org.hibernate.dialect.JDataStoreDialect;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
+@EntityListeners(AuditingEntityListener.class)
 @Table(name="storage")
 @Entity(name="file")
 public class FileEntity {
@@ -45,10 +48,10 @@ public class FileEntity {
     private String outputFilename;
 
     @CreatedDate
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
 
     @LastModifiedDate
-    private LocalDateTime updateDate;
+    private LocalDate updateDate;
 
     public Long getFileNo() {
         return this.fileNo;

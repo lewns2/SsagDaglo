@@ -49,8 +49,8 @@ public class FileService {
                 .originPath(savedPath)
                 .filename(originName)
                 .user(userRepository.findByUserNickName(userNickName).get())
-                .createdDate(LocalDate.now().atStartOfDay())
-                .updateDate(LocalDate.now().atStartOfDay())
+//                .createdDate(LocalDate.now())
+//                .updateDate(LocalDate.now())
                 .build();
 
         file.transferTo(new java.io.File(savedPath));
@@ -61,16 +61,20 @@ public class FileService {
     }
 
     // 사용자의 파일 목록을 조회하는 함수
-    public List<String> getUserFileList(String userNickName) {
-        List<String> data = new ArrayList<>();
+    public List<List> getUserFileList(String userNickName) {
+        List<List> data = new ArrayList<>();
 
         User user = userRepository.findByUserNickName(userNickName).get();
 
         List<FileEntity> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail());
 
         for(int i=0; i<fileEntityRes.size(); i++) {
+            List<String> fileInfos = new ArrayList<>();
             String userFileName = fileEntityRes.get(i).getFilename();
-            data.add(userFileName);
+            fileInfos.add(userFileName);
+            fileInfos.add(String.valueOf(fileEntityRes.get(i).getCreatedDate()));
+            fileInfos.add(String.valueOf(fileEntityRes.get(i).getUpdateDate()));
+            data.add(fileInfos);
         }
 
         return data;
