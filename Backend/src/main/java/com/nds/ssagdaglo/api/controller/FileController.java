@@ -39,9 +39,7 @@ public class FileController {
         List<?> resData = new ArrayList<>();
 
         try {
-//            data = fileService.getUserFileList(userNickName);
             resData = fileService.getUserFileList(userNickName);
-
         }
         catch (Exception e) {
             e.printStackTrace();

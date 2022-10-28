@@ -6,6 +6,7 @@ import * as useFetchAudio from '../apis/FetchAudio';
 import Alert from '../components/Alert';
 
 import "../style/FileUploadPage.scss"
+import { get } from 'react-hook-form';
 
 
 export const FileUploadPage = () => {
@@ -21,6 +22,7 @@ export const FileUploadPage = () => {
         channelTitle : '',
         thumbnails : '',
     });
+    const [testAudio, setTestAudio] = useState();
 
     // [UX] 카테고리 선택에 따라 보여줄 화면을 핸들링할 데이터 
     const clickTypeButton = (type) => {
@@ -68,7 +70,6 @@ export const FileUploadPage = () => {
                 }),
             );
             formData.append('file', uploadAudio);
-            console.log(formData);
             for (const keyValue of formData) console.log(keyValue); 
             let response = useFetchAudio.reqUploadAudio(formData);
             response.then((res) => {if(res === 200) navigate('/list')});
@@ -103,6 +104,83 @@ export const FileUploadPage = () => {
             }    
         }
     }   
+
+    const getAudioFromYoutubeLink = () => {
+        fetch("https://images" + ~~(Math.random() * 33) + "-focus-opensocial.googleusercontent.com/gadgets/proxy?container=none&url=" + encodeURIComponent(givenYoutubeLink))
+        .then((response) => {
+            console.log(response)
+            var audio_streams = {};
+
+            response.text().then((data) => {
+                var regex = /(?:ytplayer\.config\s*=\s*|ytInitialPlayerResponse\s?=\s?)(.+?)(?:;var|;\(function|\)?;\s*if|;\s*if|;\s*ytplayer\.|;\s*<\/script)/gmsu;
+
+                data = data.split('window.getPageData')[0];
+                data = data.replace('ytInitialPlayerResponse = null', '');
+                data = data.replace('ytInitialPlayerResponse=window.ytInitialPlayerResponse', '');
+                data = data.replace('ytplayer.config={args:{raw_player_response:ytInitialPlayerResponse}};', '');
+
+                var matches = regex.exec(data);
+                var data = matches && matches.length > 1 ? JSON.parse(matches[1]) : false;
+
+                console.log(data);
+
+                var streams = [],
+                result = {};
+      
+              if (data.streamingData) {
+      
+                if (data.streamingData.adaptiveFormats) {
+                  streams = streams.concat(data.streamingData.adaptiveFormats);
+                }
+      
+                if (data.streamingData.formats) {
+                  streams = streams.concat(data.streamingData.formats);
+                }
+      
+              } else {
+                return false;
+              }
+      
+              streams.forEach(function(stream, n) {
+                    var itag = stream.itag * 1,
+                    quality = false;
+                    console.log(stream);
+                    switch (itag) {
+                    case 139:
+                        quality = "48kbps";
+                        break;
+                    case 140:
+                        quality = "128kbps";
+                        break;
+                    case 141:
+                        quality = "256kbps";
+                        break;
+                    case 249:
+                        quality = "webm_l";
+                        break;
+                    case 250:
+                        quality = "webm_m";
+                        break;
+                    case 251:
+                        quality = "webm_h";
+                        break;
+                        default:
+                            break;
+                    }
+                    if (quality) audio_streams[quality] = stream.url;
+                });
+        
+                console.log(audio_streams);
+        
+                let audioSrc = audio_streams['256kbps'] || audio_streams['128kbps'] || audio_streams['48kbps'];
+                setTestAudio(audioSrc);
+                console.log(audioSrc);
+                // audio_tag.play();
+            })
+            
+        });
+        
+    }
 
 
     useEffect(() => {
@@ -144,11 +222,14 @@ export const FileUploadPage = () => {
                         : 
                     (
                     <>
-                    <div className = "youtubeLink">
-                        <input placeholder='예) www.youtube.com/watch?v=4VrNZzzOldc'
+                    <div className = "youtubeLinkWrapper">
+                        <input
+                            className="youtubeInput" 
+                            placeholder='예) www.youtube.com/watch?v=4VrNZzzOldc'
                             onChange={onChangeLink}
                         />
-                        <button onClick={() => getVideoID()}>링크 등록</button>
+                        <button className="youtubeBtn" onClick={() => getVideoID()}>링크 등록</button>
+                        <button onClick={() => getAudioFromYoutubeLink()}>음성 파일 추출</button>
                     </div>
                     
                     <div className='youtubeResult'>
@@ -161,6 +242,7 @@ export const FileUploadPage = () => {
                                 <p>제목 : {youtubeVidInfos.title ? youtubeVidInfos.title : ''}</p>
                                 <p>작성자 : {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}</p>
                             </div>
+                            <audio controls src={testAudio}></audio>
                         </>
                         ) : (
                             <div> 
