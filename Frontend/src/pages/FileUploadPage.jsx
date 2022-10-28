@@ -103,6 +103,7 @@ export const FileUploadPage = () => {
                 Alert(false, '올바른 비디오 링크를 입력해주세요!');
             }    
         }
+        getAudioFromYoutubeLink();
     }   
 
     const getAudioFromYoutubeLink = () => {
@@ -229,7 +230,7 @@ export const FileUploadPage = () => {
                             onChange={onChangeLink}
                         />
                         <button className="youtubeBtn" onClick={() => getVideoID()}>링크 등록</button>
-                        <button onClick={() => getAudioFromYoutubeLink()}>음성 파일 추출</button>
+                        {/* <button onClick={() => getAudioFromYoutubeLink()}>음성 파일 추출</button> */}
                     </div>
                     
                     <div className='youtubeResult'>
