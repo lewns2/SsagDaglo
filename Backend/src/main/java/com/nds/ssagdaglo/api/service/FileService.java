@@ -71,9 +71,11 @@ public class FileService {
         for(int i=0; i<fileEntityRes.size(); i++) {
             List<String> fileInfos = new ArrayList<>();
             String userFileName = fileEntityRes.get(i).getFilename();
+            Long userFileNum = fileEntityRes.get(i).getFileNo();
             fileInfos.add(userFileName);
             fileInfos.add(String.valueOf(fileEntityRes.get(i).getCreatedDate()));
             fileInfos.add(String.valueOf(fileEntityRes.get(i).getUpdateDate()));
+            fileInfos.add(String.valueOf(userFileNum));
             data.add(fileInfos);
         }
 
