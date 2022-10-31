@@ -19,7 +19,7 @@ public class FileController {
 
     private final FileService fileService;
 
-    @PostMapping("/upload")
+    @PostMapping("/user/upload")
     public ApiResponse<?> uploadFile(@RequestPart(value = "key")FileDto.FileResisterReq userNickname, @RequestPart("file") MultipartFile file) throws IOException {
         System.out.println(userNickname.getUserNickname());
 
@@ -34,7 +34,7 @@ public class FileController {
         return ApiResponse.createSuccessWithNoContent();
     }
 
-    @GetMapping("/list/{userNickName}")
+    @GetMapping("/user/list/{userNickName}")
     public ApiResponse<?> getFileList(@PathVariable String userNickName) {
         List<?> resData = new ArrayList<>();
 

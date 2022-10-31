@@ -32,9 +32,9 @@ public class FileService {
     @Value("${file.dir}")
     private String fileDir;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-    private final AmazonS3Client amazonS3Client;
+//    @Value("${cloud.aws.s3.bucket}")
+//    private String bucket;
+//    private final AmazonS3Client amazonS3Client;
 
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
