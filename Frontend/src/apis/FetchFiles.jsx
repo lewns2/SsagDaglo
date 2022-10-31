@@ -7,7 +7,8 @@ const reqFiles = async (userNickName) => {
   let result;
   try {
     await axios
-      .get(`${baseURL}/list/${userNickName}`)
+      .get(`${baseURL}/list/${userNickName}?page=1&size=5sort=DESC`)
+      // .get(`${baseURL}/list/findAll?page=1&size=5&nickName=${userNickName}`)
       .then((res) => (result = res.data))
       .catch((err) => console.log(err));
   } catch {
