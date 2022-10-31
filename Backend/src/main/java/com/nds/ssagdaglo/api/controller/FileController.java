@@ -6,8 +6,13 @@ import com.nds.ssagdaglo.api.service.FileService;
 import com.nds.ssagdaglo.common.ApiResponse;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,11 +40,11 @@ public class FileController {
     }
 
     @GetMapping("/user/list/{userNickName}")
-    public ApiResponse<?> getFileList(@PathVariable String userNickName) {
-        List<?> resData = new ArrayList<>();
+    public ApiResponse<?> getFileList(@PathVariable String userNickName, @PageableDefault(page=0, size=5, sort = "no", direction = Sort.Direction.DESC) Pageable pagealbe) {
+        List<?> resData;
 
         try {
-            resData = fileService.getUserFileList(userNickName);
+            resData = fileService.getUserFileList(userNickName, pagealbe);
         }
         catch (Exception e) {
             e.printStackTrace();

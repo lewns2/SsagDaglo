@@ -13,7 +13,6 @@ export const FileListPage = () => {
     let userNickName = sessionStorage.getItem('userNickName');
     let response = useFetchFiles.reqFiles(userNickName);
     response.then((res) => {
-      // console.log(res.data);
       setFileList(res.data.reverse());
     });
   }, []);
@@ -32,14 +31,6 @@ export const FileListPage = () => {
             파일 업로드
           </p>
         </div>
-
-        {/* 카테고리 선택란 + 검색 창 */}
-        <div className="FileListTool">
-          <input type="text"></input>
-          <button>검색</button>
-        </div>
-
-        {/* <button onClick={() => testApi()}>테에에에에스으으으으트으으으으</button> */}
 
         {/* 파일 목록 영역 */}
         <table className="board-table">
