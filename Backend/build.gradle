@@ -40,13 +40,13 @@ dependencies {
 	implementation 'mysql:mysql-connector-java'
 
 	// Swagger
-//	implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
-
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 	implementation 'io.springfox:springfox-swagger2:3.0.0'
 
-
+	// AWS S3
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
+	implementation 'com.amazonaws:aws-java-sdk-s3'
 }
 
 tasks.named('test') {
