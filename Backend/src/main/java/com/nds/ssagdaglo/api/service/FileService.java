@@ -105,7 +105,7 @@ public class FileService {
     }
 
     // 특정 사용자의 파일 목록을 조회하는 함수
-    public List<List> getUserFileList(String userNickName, Pageable pageable) {
+    public FileDto.UserFileListRes getUserFileList(String userNickName, Pageable pageable) {
         List<List> data = new ArrayList<>();
 
         User user = userRepository.findByUserNickName(userNickName).get();
@@ -115,22 +115,23 @@ public class FileService {
         List<FileEntity> fileEntityResToList = fileEntityRes.getContent();
 
         // 전체 페이지 수 넘겨주기
-        List<Integer> pageInfo = new ArrayList<>();
-        pageInfo.add(fileEntityRes.getTotalPages());
-
-        data.add(pageInfo);
+        FileDto.UserFileListRes res = new FileDto.UserFileListRes();
+        res.setTotalPages(fileEntityRes.getTotalPages());
 
         for(int i=0; i<fileEntityResToList.size(); i++) {
-            List<String> fileInfos = new ArrayList<>();
+            List<String> fileInfo = new ArrayList<>();
             String userFileName = fileEntityResToList.get(i).getFilename();
             Long userFileNum = fileEntityResToList.get(i).getFileNo();
-            fileInfos.add(userFileName);
-            fileInfos.add(String.valueOf(fileEntityResToList.get(i).getCreatedDate()));
-            fileInfos.add(String.valueOf(fileEntityResToList.get(i).getUpdateDate()));
-            fileInfos.add(String.valueOf(userFileNum));
-            data.add(fileInfos);
+            fileInfo.add(userFileName);
+            fileInfo.add(String.valueOf(fileEntityResToList.get(i).getCreatedDate()));
+            fileInfo.add(String.valueOf(fileEntityResToList.get(i).getUpdateDate()));
+            fileInfo.add(String.valueOf(userFileNum));
+            data.add(fileInfo);
         }
 
-        return data;
+        // 파일 정보를 담은 2차원 배열 (파일 이름, 파일 번호, 생성일, 수정일)
+        res.setFileInfo(data);
+
+        return res;
     }
 }
