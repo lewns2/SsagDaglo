@@ -45,7 +45,7 @@ public class FileController {
 
     // 특정 유저의 파일 목록 조회 + 페이징 처리
     @GetMapping("/list/findAll/{userNickName}")
-    public ApiResponse<?> getFileList(@PathVariable String userNickName, @PageableDefault(page=0, size=5, sort = "no", direction = Sort.Direction.DESC) Pageable pagealbe) {
+    public ApiResponse<?> getFileList(@PathVariable String userNickName, @PageableDefault(page=0, size=5, sort = "fileNo", direction = Sort.Direction.DESC) Pageable pagealbe) {
         List<?> resData;
 
         try {

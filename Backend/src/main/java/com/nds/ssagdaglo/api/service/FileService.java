@@ -110,15 +110,23 @@ public class FileService {
 
         User user = userRepository.findByUserNickName(userNickName).get();
 
-        List<FileEntity> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail(), pageable);
+        Page<FileEntity> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail(), pageable);
 
-        for(int i=0; i<fileEntityRes.size(); i++) {
+        List<FileEntity> fileEntityResToList = fileEntityRes.getContent();
+
+        // 전체 페이지 수 넘겨주기
+        List<Integer> pageInfo = new ArrayList<>();
+        pageInfo.add(fileEntityRes.getTotalPages());
+
+        data.add(pageInfo);
+
+        for(int i=0; i<fileEntityResToList.size(); i++) {
             List<String> fileInfos = new ArrayList<>();
-            String userFileName = fileEntityRes.get(i).getFilename();
-            Long userFileNum = fileEntityRes.get(i).getFileNo();
+            String userFileName = fileEntityResToList.get(i).getFilename();
+            Long userFileNum = fileEntityResToList.get(i).getFileNo();
             fileInfos.add(userFileName);
-            fileInfos.add(String.valueOf(fileEntityRes.get(i).getCreatedDate()));
-            fileInfos.add(String.valueOf(fileEntityRes.get(i).getUpdateDate()));
+            fileInfos.add(String.valueOf(fileEntityResToList.get(i).getCreatedDate()));
+            fileInfos.add(String.valueOf(fileEntityResToList.get(i).getUpdateDate()));
             fileInfos.add(String.valueOf(userFileNum));
             data.add(fileInfos);
         }
