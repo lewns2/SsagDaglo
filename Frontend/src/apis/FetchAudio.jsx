@@ -11,7 +11,8 @@ const reqUploadAudio = async (data) => {
 
   try {
     await axios.post(`${baseURL}/upload`, data, header).then((res) => {
-      result = res.status;
+      console.log(res);
+      (res.data.status === "sucess" ? result = true : result = false )
     });
 
     return result;

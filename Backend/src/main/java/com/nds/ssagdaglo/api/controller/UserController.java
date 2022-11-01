@@ -30,25 +30,32 @@ public class UserController {
     }
 
     // login은 Spring Security가 제공하는 것을 사용해서, 기존 코드는 비활성화.
-//    @CrossOrigin(origins="*", allowedHeaders = "*")
-//    @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    public String signIn(
-//            @RequestBody User user
-//    ) {
-//        return userService.signIn(user);
-//    }
+    @CrossOrigin(origins="*", allowedHeaders = "*")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ApiResponse<?> signIn(@RequestBody User user) {
 
-    @PostMapping(value = "/chknickname")
-    public boolean checkNickName(
-            @RequestBody User user
-    ) {
-        return userService.checkNickName(user);
+        String res = userService.signIn(user);
+        if(res.equals("false")) {
+            return ApiResponse.createError("로그인 오류");
+        }
+        return ApiResponse.createSuccess(res);
     }
 
-    @RequestMapping(value = "/chkemail", method = RequestMethod.POST)
-    public boolean checkEmail(
-            @RequestBody User user
-    ) {
-        return userService.checkEmail(user);
+    // 닉네임 중복 확인 함수
+    @CrossOrigin(origins="*", allowedHeaders = "*")
+    @PostMapping(value = "/chknickname")
+    public ApiResponse<?> checkNickName(String userNickName) throws IOException {
+        Boolean isPossible;
+        isPossible = userService.checkNickName(userNickName);
+
+        return (isPossible ? ApiResponse.createSuccessWithNoContent() : ApiResponse.createError("중복된 닉네임이 존재합니다."));
+    }
+    @CrossOrigin(origins="*", allowedHeaders = "*")
+    @PostMapping(value = "/chkemail")
+    public ApiResponse<?> checkEmail(String userEmail) throws IOException {
+        Boolean isPossible;
+        isPossible = userService.checkEmail(userEmail);
+
+        return (isPossible ? ApiResponse.createSuccessWithNoContent() : ApiResponse.createError("중복된 이메일이 존재합니다."));
     }
 }

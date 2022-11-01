@@ -39,12 +39,12 @@ public class FileService {
     private final UserRepository userRepository;
 
     // S3 업로드 함수
-    public static void uploadObject(String[] args) throws IOException {
+    public static void uploadObject(MultipartFile file) throws IOException {
         Regions clientRegion = Regions.DEFAULT_REGION;
         String bucketName = "sdgl-files-bucket";
-        String stringObjKeyName = "input";
-        String fileObjKeyName = "inputTest";
-        String fileName = "test";
+        String stringObjKeyName = "sdgl-files-bucket/input_files/";
+        String fileObjKeyName = "aaa.txt";
+        String fileName = file.getOriginalFilename();
 
         try {
             //This code expects that you have AWS credentials set up per:
@@ -58,10 +58,10 @@ public class FileService {
 
             // Upload a file as a new object with ContentType and title specified.
             PutObjectRequest request = new PutObjectRequest(bucketName, fileObjKeyName, new File(fileName));
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType("plain/text");
-            metadata.addUserMetadata("title", "someTitle");
-            request.setMetadata(metadata);
+//            ObjectMetadata metadata = new ObjectMetadata();
+//            metadata.setContentType("plain/text");
+//            metadata.addUserMetadata("title", "someTitle");
+//            request.setMetadata(metadata);
             s3Client.putObject(request);
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process

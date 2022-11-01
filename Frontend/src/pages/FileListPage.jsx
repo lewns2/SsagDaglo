@@ -13,6 +13,7 @@ export const FileListPage = () => {
     let userNickName = sessionStorage.getItem('userNickName');
     let response = useFetchFiles.reqFiles(userNickName);
     response.then((res) => {
+      console.log(res);
       setFileList(res.data.reverse());
     });
   }, []);

@@ -28,11 +28,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(corsFilter) // @CrossOrigin(인증 x), 시큐리티 필터에 등록 인증(o)
                 .formLogin().disable()
                 .httpBasic().disable()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager를 던져줌.
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
+//                .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager를 던져줌.
+//                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                 .authorizeRequests()
-                .antMatchers("/user/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole(('ROLE_ADMIN'))")
+//                .antMatchers("/list/{userNickName}", "/upload")
+//                .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole(('ROLE_ADMIN'))")
                 .antMatchers("/manager/**")
                 .access("hasRole('ROLE_MANAGER') or hasRole(('ROLE_ADMIN'))")
                 .antMatchers("/admin/**")
