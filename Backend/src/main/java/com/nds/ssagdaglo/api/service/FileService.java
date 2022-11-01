@@ -7,9 +7,19 @@ import com.nds.ssagdaglo.db.repository.FileRepository;
 import com.nds.ssagdaglo.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +37,42 @@ public class FileService {
 
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
+
+    // S3 업로드 함수
+    public static void uploadObject(MultipartFile file) throws IOException {
+        Regions clientRegion = Regions.DEFAULT_REGION;
+        String bucketName = "sdgl-files-bucket";
+        String stringObjKeyName = "sdgl-files-bucket/input_files/";
+        String fileObjKeyName = "aaa.txt";
+        String fileName = file.getOriginalFilename();
+
+        try {
+            //This code expects that you have AWS credentials set up per:
+            // https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html
+            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                    .withRegion(Regions.AP_NORTHEAST_2)
+                    .build();
+
+            // Upload a text string as a new object.
+            s3Client.putObject(bucketName, stringObjKeyName, "Uploaded String Object");
+
+            // Upload a file as a new object with ContentType and title specified.
+            PutObjectRequest request = new PutObjectRequest(bucketName, fileObjKeyName, new File(fileName));
+//            ObjectMetadata metadata = new ObjectMetadata();
+//            metadata.setContentType("plain/text");
+//            metadata.addUserMetadata("title", "someTitle");
+//            request.setMetadata(metadata);
+            s3Client.putObject(request);
+        } catch (AmazonServiceException e) {
+            // The call was transmitted successfully, but Amazon S3 couldn't process
+            // it, so it returned an error response.
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            // Amazon S3 couldn't be contacted for a response, or the client
+            // couldn't parse the response from Amazon S3.
+            e.printStackTrace();
+        }
+    }
 
     // 업로드된 파일을 저장하는 함수
     @Transactional(rollbackFor = Exception.class)
@@ -49,8 +95,6 @@ public class FileService {
                 .originPath(savedPath)
                 .filename(originName)
                 .user(userRepository.findByUserNickName(userNickName).get())
-//                .createdDate(LocalDate.now())
-//                .updateDate(LocalDate.now())
                 .build();
 
         file.transferTo(new java.io.File(savedPath));
@@ -60,20 +104,22 @@ public class FileService {
         return savedFileEntity.getFileNo();
     }
 
-    // 사용자의 파일 목록을 조회하는 함수
-    public List<List> getUserFileList(String userNickName) {
+    // 특정 사용자의 파일 목록을 조회하는 함수
+    public List<List> getUserFileList(String userNickName, Pageable pageable) {
         List<List> data = new ArrayList<>();
 
         User user = userRepository.findByUserNickName(userNickName).get();
 
-        List<FileEntity> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail());
+        List<FileEntity> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail(), pageable);
 
         for(int i=0; i<fileEntityRes.size(); i++) {
             List<String> fileInfos = new ArrayList<>();
             String userFileName = fileEntityRes.get(i).getFilename();
+            Long userFileNum = fileEntityRes.get(i).getFileNo();
             fileInfos.add(userFileName);
             fileInfos.add(String.valueOf(fileEntityRes.get(i).getCreatedDate()));
             fileInfos.add(String.valueOf(fileEntityRes.get(i).getUpdateDate()));
+            fileInfos.add(String.valueOf(userFileNum));
             data.add(fileInfos);
         }
 

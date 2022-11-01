@@ -6,11 +6,10 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-@Setter
-@Getter
+@Data // Getter + Setter
 @Entity(name = "user")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,6 +34,15 @@ public class User {
 
     @Column(name = "password", length = 200, nullable = false)
     private String userPassword;
+
+    private String roles; // USER, ADMIN
+
+    public List<String> getRoleList() {
+        if(this.roles.length() > 0) {
+            return Arrays.asList(this.roles.split(","));
+        }
+        return new ArrayList<>();
+    }
 
     // 추가 2022-10-24
 //    @Override
