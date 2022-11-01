@@ -3,11 +3,11 @@ import axios from 'axios';
 const baseURL = 'http://localhost:8080';
 
 // 1. 해당 유저 파일 목록 조회
-const reqFiles = async (userNickName) => {
+const reqFiles = async (userNickName, selectedPage) => {
   let result;
   try {
     await axios
-    .get(`${baseURL}/list/findAll/${userNickName}?page=0&size=5`)
+      .get(`${baseURL}/list/findAll/${userNickName}?page=${selectedPage - 1}&size=7`)
       // .get(`${baseURL}/list?page=1&size=5sort=DES&nickname=${}`)
       // .get(`${baseURL}/list/findAll?page=1&size=5&nickName=${userNickName}`)
       .then((res) => (result = res.data))
