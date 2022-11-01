@@ -40,17 +40,17 @@ public class FileService {
 
     // S3 업로드 함수
     public static void uploadObject(MultipartFile file) throws IOException {
-        Regions clientRegion = Regions.DEFAULT_REGION;
+        Regions clientRegion = Regions.AP_NORTHEAST_2;
         String bucketName = "sdgl-files-bucket";
-        String stringObjKeyName = "sdgl-files-bucket/input_files/";
-        String fileObjKeyName = "aaa.txt";
-        String fileName = file.getOriginalFilename();
+        String stringObjKeyName = "input_files"; // 경로 + String 전송 시 object 이름
+        String fileObjKeyName = "input_files/aaa.txt"; // 경로 + 파일 업로드 이름
+        String fileName = "C:\\Users\\NDS\\IdeaProjects\\AWS_Test\\src\\main\\java\\uploadTest.txt";
 
         try {
             //This code expects that you have AWS credentials set up per:
             // https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withRegion(Regions.AP_NORTHEAST_2)
+                    .withRegion(clientRegion)
                     .build();
 
             // Upload a text string as a new object.
