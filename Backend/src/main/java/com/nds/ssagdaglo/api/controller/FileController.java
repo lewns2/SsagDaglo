@@ -29,11 +29,11 @@ public class FileController {
     @PostMapping("/upload")
     public ApiResponse<?> uploadFile(@RequestPart(value = "key")FileDto.FileResisterReq userNickname, @RequestPart("file") MultipartFile file) throws IOException {
         System.out.println(userNickname.getUserNickname());
-        String[] name=new String[]{"Kim","Park","Yi"};
+        String[] name = new String[]{"Kim","Park","Yi"};
 
         try {
             fileService.saveFile(file, userNickname.getUserNickname());
-            fileService.uploadObject(name);
+//            fileService.uploadObject(file);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -44,7 +44,7 @@ public class FileController {
     }
 
     // 특정 유저의 파일 목록 조회 + 페이징 처리
-    @GetMapping("/user/list/{userNickName}")
+    @GetMapping("/list/findAll/{userNickName}")
     public ApiResponse<?> getFileList(@PathVariable String userNickName, @PageableDefault(page=0, size=5, sort = "no", direction = Sort.Direction.DESC) Pageable pagealbe) {
         List<?> resData;
 

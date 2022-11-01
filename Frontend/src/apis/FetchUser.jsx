@@ -11,7 +11,7 @@ const reqSignup = async (data) => {
 
         await axios.post(`${baseURL}/signup`, data)
         .then((res) => {
-            res.data === true? result = true : result = false
+            res.data.status === "sucess" ? result = true : result = false
         }); 
         
         return result;
@@ -28,9 +28,10 @@ const reqLogin = async (data) => {
         let result;
         await axios.post(`${baseURL}/login`, data)
         .then((res) =>{
+
             result = res.data;
-            if(res.data !== false) {
-                sessionStorage.setItem('userNickName', res.data);
+            if(res.data.status === "sucess") {
+                sessionStorage.setItem('userNickName', result.data);
             }
         }); 
         return result;
@@ -48,7 +49,10 @@ const reqCheckNickName = async (data) => {
         let result;
 
         await axios.post(`${baseURL}/chknickname`, data, {headers : {'Content-Type': 'application/json'}})
-        .then((res) => res.data === true? result = true : result = false); 
+        .then((res) =>
+        {   
+            res.data.status === "sucess"? result = true : result = false}
+        ); 
         return result;
         
     } catch (error) {
@@ -63,7 +67,9 @@ const reqCheckEmail = async (data) => {
         let result;
 
         await axios.post(`${baseURL}/chkemail`, data, {headers : {'Content-Type': 'application/json'}})
-        .then((res) => res.data ? result = true : result = false); 
+        .then((res) => {
+            res.data.status === "sucess" ? result = true : result = false
+        }); 
         return result;
         
     } catch (error) {

@@ -68,7 +68,7 @@ export const FileUploadPage = () => {
       for (const keyValue of formData) console.log(keyValue);
       let response = useFetchAudio.reqUploadAudio(formData);
       response.then((res) => {
-        if (res === 200) navigate('/list');
+        if (res === true) navigate('/list');
       });
     }
 
