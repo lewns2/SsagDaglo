@@ -21,9 +21,15 @@ const reqFiles = async (userNickName, selectedPage) => {
 };
 
 // 2. 파일에 대한 결과 요청
-const reqFileInfo = async () => {
+const reqFileInfo = async (fileNum) => {
   let result;
   try {
+    await axios
+      .get(`${baseURL}/list/${fileNum}`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   } catch {
     console.log('파일 결과 요청 에러');
   }

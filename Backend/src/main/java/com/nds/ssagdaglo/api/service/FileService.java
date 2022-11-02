@@ -1,5 +1,7 @@
 package com.nds.ssagdaglo.api.service;
 
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.s3.model.*;
 import com.nds.ssagdaglo.api.dto.FileDto;
 import com.nds.ssagdaglo.db.entity.FileEntity;
 import com.nds.ssagdaglo.db.entity.User;
@@ -18,11 +20,8 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +37,27 @@ public class FileService {
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
 
+    // S3 공통 정보
+    Regions clientRegion = Regions.AP_NORTHEAST_2;
+    String bucketName = "sdgl-files-bucket";
+
     // S3 업로드 함수
-    public static void uploadObject(MultipartFile file) throws IOException {
+    public Boolean uploadObject(MultipartFile file, String userNickName) throws IOException {
+
+        // 사용자별 upload 폴더 생성 + 파일 저장
+        String savedPath = System.getProperty("user.dir") + "/upload";
+        new File(savedPath).mkdir();
+        file.transferTo(new java.io.File(savedPath));
+
+        // S3 기본 정보
         Regions clientRegion = Regions.AP_NORTHEAST_2;
         String originName = file.getOriginalFilename();
-        String bucketName = "sdgl-files-bucket";
+//        String bucketName = "sdgl-files-bucket";
         String stringObjKeyName = "input_files"; // 경로 + String 전송 시 object 이름
         String fileObjKeyName = "input_files" + originName; // 경로 + 파일 업로드 이름
-        String fileName = "C:\\Users\\NDS\\IdeaProjects\\AWS_Test\\src\\main\\java\\uploadTest.txt";
+//        String fileName = "C:\\Users\\NDS\\IdeaProjects\\AWS_Test\\src\\main\\java\\uploadTest.txt";
+        String fileName = savedPath + originName;
+
 
         try {
             //This code expects that you have AWS credentials set up per:
@@ -64,6 +76,100 @@ public class FileService {
 //            metadata.addUserMetadata("title", "someTitle");
 //            request.setMetadata(metadata);
             s3Client.putObject(request);
+
+            // 파일 정보 엔티티 저장
+            FileEntity fileEntity = FileEntity.builder()
+                    .originPath(savedPath) // * S3 주소로 변경해야함.
+                    .filename(originName)
+                    .user(userRepository.findByUserNickName(userNickName).get())
+                    .build();
+
+            fileRepository.save(fileEntity);
+
+        } catch (AmazonServiceException e) {
+            // The call was transmitted successfully, but Amazon S3 couldn't process
+            // it, so it returned an error response.
+            e.printStackTrace();
+            return false;
+
+        } catch (SdkClientException e) {
+            // Amazon S3 couldn't be contacted for a response, or the client
+            // couldn't parse the response from Amazon S3.
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    // 업로드된 파일을 저장하는 함수
+//    @Transactional(rollbackFor = Exception.class)
+//    public Long saveFile(MultipartFile file, String userNickName) throws IOException {
+//        if(file == null) {
+//            return null;
+//        }
+//
+//        String originName = file.getOriginalFilename();
+//
+//        String uuid = UUID.randomUUID().toString();
+//
+//        String extension = originName.substring(originName.lastIndexOf("."));
+//
+//        String savedName = uuid + extension;
+//
+//        // 사용자별 upload 폴더 생성
+//        String savedPath = System.getProperty("user.dir") + "/upload";
+//        new File(savedPath).mkdir();
+//
+//        FileEntity fileEntity = FileEntity.builder()
+//                .originPath(savedPath)
+//                .filename(originName)
+//                .user(userRepository.findByUserNickName(userNickName).get())
+//                .build();
+//
+//        // path에 저장
+//        file.transferTo(new java.io.File(savedPath));
+//
+//        FileEntity savedFileEntity = fileRepository.save(fileEntity);
+//
+//        return savedFileEntity.getFileNo();
+//    }
+
+    // S3 결과 파일 조회 함수
+    public void getObject(Integer fileNum) throws IOException {
+//        Regions clientRegion = Regions.AP_NORTHEAST_2;
+//        String bucketName = "*** Bucket name ***";
+        String key = "*** Object key ***";
+
+        S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
+        try {
+            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                    .withRegion(clientRegion)
+                    .withCredentials(new ProfileCredentialsProvider())
+                    .build();
+
+            // Get an object and print its contents.
+            System.out.println("Downloading an object");
+            fullObject = s3Client.getObject(new GetObjectRequest(bucketName, key));
+            System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
+            System.out.println("Content: ");
+            displayTextInputStream(fullObject.getObjectContent());
+
+            // Get a range of bytes from an object and print the bytes.
+            GetObjectRequest rangeObjectRequest = new GetObjectRequest(bucketName, key)
+                    .withRange(0, 9);
+            objectPortion = s3Client.getObject(rangeObjectRequest);
+            System.out.println("Printing bytes retrieved.");
+            displayTextInputStream(objectPortion.getObjectContent());
+
+            // Get an entire object, overriding the specified response headers, and print the object's content.
+            ResponseHeaderOverrides headerOverrides = new ResponseHeaderOverrides()
+                    .withCacheControl("No-cache")
+                    .withContentDisposition("attachment; filename=example.txt");
+            GetObjectRequest getObjectRequestHeaderOverride = new GetObjectRequest(bucketName, key)
+                    .withResponseHeaders(headerOverrides);
+            headerOverrideObject = s3Client.getObject(getObjectRequestHeaderOverride);
+            displayTextInputStream(headerOverrideObject.getObjectContent());
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
             // it, so it returned an error response.
@@ -72,40 +178,28 @@ public class FileService {
             // Amazon S3 couldn't be contacted for a response, or the client
             // couldn't parse the response from Amazon S3.
             e.printStackTrace();
+        } finally {
+            // To ensure that the network connection doesn't remain open, close any open input streams.
+            if (fullObject != null) {
+                fullObject.close();
+            }
+            if (objectPortion != null) {
+                objectPortion.close();
+            }
+            if (headerOverrideObject != null) {
+                headerOverrideObject.close();
+            }
         }
     }
 
-    // 업로드된 파일을 저장하는 함수
-    @Transactional(rollbackFor = Exception.class)
-    public Long saveFile(MultipartFile file, String userNickName) throws IOException {
-        if(file == null) {
-            return null;
+    private static void displayTextInputStream(InputStream input) throws IOException {
+        // Read the text input stream one line at a time and display each line.
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
         }
-
-        String originName = file.getOriginalFilename();
-
-        String uuid = UUID.randomUUID().toString();
-
-        String extension = originName.substring(originName.lastIndexOf("."));
-
-        String savedName = uuid + extension;
-
-        // 사용자별 upload 폴더 생성
-        String savedPath = System.getProperty("user.dir") + "/upload";
-        new File(savedPath).mkdir();
-
-        FileEntity fileEntity = FileEntity.builder()
-                .originPath(savedPath)
-                .filename(originName)
-                .user(userRepository.findByUserNickName(userNickName).get())
-                .build();
-
-        // path에 저장
-        file.transferTo(new java.io.File(savedPath));
-
-        FileEntity savedFileEntity = fileRepository.save(fileEntity);
-
-        return savedFileEntity.getFileNo();
+        System.out.println();
     }
 
     // 특정 사용자의 파일 목록을 조회하는 함수
