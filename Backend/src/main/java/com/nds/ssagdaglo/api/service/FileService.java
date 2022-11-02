@@ -41,9 +41,10 @@ public class FileService {
     // S3 업로드 함수
     public static void uploadObject(MultipartFile file) throws IOException {
         Regions clientRegion = Regions.AP_NORTHEAST_2;
+        String originName = file.getOriginalFilename();
         String bucketName = "sdgl-files-bucket";
         String stringObjKeyName = "input_files"; // 경로 + String 전송 시 object 이름
-        String fileObjKeyName = "input_files/aaa.txt"; // 경로 + 파일 업로드 이름
+        String fileObjKeyName = "input_files" + originName; // 경로 + 파일 업로드 이름
         String fileName = "C:\\Users\\NDS\\IdeaProjects\\AWS_Test\\src\\main\\java\\uploadTest.txt";
 
         try {
@@ -54,7 +55,7 @@ public class FileService {
                     .build();
 
             // Upload a text string as a new object.
-            s3Client.putObject(bucketName, stringObjKeyName, "Uploaded String Object");
+            s3Client.putObject(bucketName, stringObjKeyName, "Uploaded Audio Object");
 
             // Upload a file as a new object with ContentType and title specified.
             PutObjectRequest request = new PutObjectRequest(bucketName, fileObjKeyName, new File(fileName));
@@ -89,7 +90,9 @@ public class FileService {
 
         String savedName = uuid + extension;
 
-        String savedPath = fileDir + savedName;
+        // 사용자별 upload 폴더 생성
+        String savedPath = System.getProperty("user.dir") + "/upload";
+        new File(savedPath).mkdir();
 
         FileEntity fileEntity = FileEntity.builder()
                 .originPath(savedPath)
@@ -97,6 +100,7 @@ public class FileService {
                 .user(userRepository.findByUserNickName(userNickName).get())
                 .build();
 
+        // path에 저장
         file.transferTo(new java.io.File(savedPath));
 
         FileEntity savedFileEntity = fileRepository.save(fileEntity);
