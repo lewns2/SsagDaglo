@@ -40,17 +40,17 @@ public class FileService {
 
     // S3 업로드 함수
     public static void uploadObject(MultipartFile file) throws IOException {
-        Regions clientRegion = Regions.DEFAULT_REGION;
+        Regions clientRegion = Regions.AP_NORTHEAST_2;
         String bucketName = "sdgl-files-bucket";
-        String stringObjKeyName = "sdgl-files-bucket/input_files/";
-        String fileObjKeyName = "aaa.txt";
-        String fileName = file.getOriginalFilename();
+        String stringObjKeyName = "input_files"; // 경로 + String 전송 시 object 이름
+        String fileObjKeyName = "input_files/aaa.txt"; // 경로 + 파일 업로드 이름
+        String fileName = "C:\\Users\\NDS\\IdeaProjects\\AWS_Test\\src\\main\\java\\uploadTest.txt";
 
         try {
             //This code expects that you have AWS credentials set up per:
             // https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withRegion(Regions.AP_NORTHEAST_2)
+                    .withRegion(clientRegion)
                     .build();
 
             // Upload a text string as a new object.
@@ -105,24 +105,33 @@ public class FileService {
     }
 
     // 특정 사용자의 파일 목록을 조회하는 함수
-    public List<List> getUserFileList(String userNickName, Pageable pageable) {
+    public FileDto.UserFileListRes getUserFileList(String userNickName, Pageable pageable) {
         List<List> data = new ArrayList<>();
 
         User user = userRepository.findByUserNickName(userNickName).get();
 
-        List<FileEntity> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail(), pageable);
+        Page<FileEntity> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail(), pageable);
 
-        for(int i=0; i<fileEntityRes.size(); i++) {
-            List<String> fileInfos = new ArrayList<>();
-            String userFileName = fileEntityRes.get(i).getFilename();
-            Long userFileNum = fileEntityRes.get(i).getFileNo();
-            fileInfos.add(userFileName);
-            fileInfos.add(String.valueOf(fileEntityRes.get(i).getCreatedDate()));
-            fileInfos.add(String.valueOf(fileEntityRes.get(i).getUpdateDate()));
-            fileInfos.add(String.valueOf(userFileNum));
-            data.add(fileInfos);
+        List<FileEntity> fileEntityResToList = fileEntityRes.getContent();
+
+        // 전체 페이지 수 넘겨주기
+        FileDto.UserFileListRes res = new FileDto.UserFileListRes();
+        res.setTotalPages(fileEntityRes.getTotalPages());
+
+        for(int i=0; i<fileEntityResToList.size(); i++) {
+            List<String> fileInfo = new ArrayList<>();
+            String userFileName = fileEntityResToList.get(i).getFilename();
+            Long userFileNum = fileEntityResToList.get(i).getFileNo();
+            fileInfo.add(userFileName);
+            fileInfo.add(String.valueOf(fileEntityResToList.get(i).getCreatedDate()));
+            fileInfo.add(String.valueOf(fileEntityResToList.get(i).getUpdateDate()));
+            fileInfo.add(String.valueOf(userFileNum));
+            data.add(fileInfo);
         }
 
-        return data;
+        // 파일 정보를 담은 2차원 배열 (파일 이름, 파일 번호, 생성일, 수정일)
+        res.setFileInfo(data);
+
+        return res;
     }
 }
