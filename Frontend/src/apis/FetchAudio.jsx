@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const baseURL = 'http://localhost:8080';
-const baseURL = 'http://sdgl.ap-northeast-2.elasticbeanstalk.com/';
+const baseURL = 'https://api.ssagdaglo.cf';
 
 const header = { headers: { 'Content-Type': 'multipart/form-data' } };
 
