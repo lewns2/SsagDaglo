@@ -1,7 +1,7 @@
 import axios from "axios"
 
 // const baseURL = 'http://localhost:8080'
-const baseURL = 'https://api.ssagdaglo.cf'
+const baseURL = 'http://api.ssagdaglo.cf'
 
 // 1. 회원 가입 요청 API
 const reqSignup = async (data) => {    
