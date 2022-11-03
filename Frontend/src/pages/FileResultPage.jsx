@@ -12,8 +12,8 @@ export const FileResultPage = () => {
   useEffect(() => {
     // 상세 파일 데이터 요청
     setFileNum(loaction.state.id);
-    useFetchFiles.reqFileInfo(fileNum);
-  }, [fileNum]);
+    useFetchFiles.reqFileInfo(loaction.state.id);
+  }, []);
 
   return (
     <>
