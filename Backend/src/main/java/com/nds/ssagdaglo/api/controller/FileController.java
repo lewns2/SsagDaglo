@@ -4,7 +4,6 @@ package com.nds.ssagdaglo.api.controller;
 import com.nds.ssagdaglo.api.dto.FileDto;
 import com.nds.ssagdaglo.api.service.FileService;
 import com.nds.ssagdaglo.common.ApiResponse;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 @CrossOrigin(origins="*", allowedHeaders = "*")
@@ -25,14 +25,15 @@ public class FileController {
 
     private final FileService fileService;
 
-    // S3 파일 업로드
+    // S3 파일 업로드 - 오디오 파일
     @CrossOrigin(origins="*", allowedHeaders = "*")
-    @PostMapping("/upload")
+    @PostMapping("/upload/file")
     public ApiResponse<?> uploadFile(@RequestPart(value = "key")FileDto.FileResisterReq userNickname, @RequestPart("file") MultipartFile file) throws IOException {
         Boolean isSuccess;
         try {
 //            fileService.saveFile(file, userNickname.getUserNickname());
-            isSuccess = fileService.uploadObject(file, userNickname.getUserNickname());
+//            isSuccess = fileService.uploadObject(file, userNickname.getUserNickname());
+            isSuccess = fileService.localFileSave(file, userNickname.getUserNickname());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -42,16 +43,42 @@ public class FileController {
         return (isSuccess ? ApiResponse.createSuccessWithNoContent() : ApiResponse.createError("파일 업로드 중 문제가 발생했습니다."));
     }
 
+    // S3 파일 업로드 - 유튜브 링크
+    @CrossOrigin(origins="*", allowedHeaders = "*")
+    @PostMapping("/upload/link")
+    public ApiResponse<?> uploadLink(@RequestBody List<String> link) throws IOException {
+        Boolean isSuccess;
+        try {
+//            URL url = new URL(link[0]);
+//            System.out.println(userNickname);
+//            System.out.println(userNickname);
+//            System.out.println(userNickname);
+            System.out.println(link);
+            System.out.println(link);
+            System.out.println(link);
+//            isSuccess = fileService.convertAudio(link, userNickname);
+            isSuccess = fileService.convertAudio(link);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ApiResponse.createError("파일 업로드 중 문제가 발생했습니다.");
+        }
+//        return ApiResponse.createSuccessWithNoContent();
+        return (isSuccess ? ApiResponse.createSuccessWithNoContent() : ApiResponse.createError("파일 업로드 중 문제가 발생했습니다."));
+    }
+
+
     // S3 파일 조회
     @GetMapping("/list/{fileNum}")
     public ApiResponse<?> getFile(@PathVariable Integer fileNum) throws IOException {
+        String res = "false" ;
         try {
-            fileService.getObject(fileNum);
+            res = fileService.getObject(fileNum);
         }
         catch(Exception e) {
             e.printStackTrace();
         }
-        return ApiResponse.createSuccessWithNoContent();
+        return (res != "false" ? ApiResponse.createSuccess(res) : ApiResponse.createError("결과 파일 조회 중 에러가 발생했습니다."));
     }
 
     // 특정 유저의 파일 목록 조회 + 페이징 처리

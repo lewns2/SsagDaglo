@@ -24,7 +24,7 @@ export const FileListPage = () => {
   }, [selectedPage]);
 
   // 결과 페이지 이동 함수
-  const moveToResult = (num, fileNo) => {
+  const moveToResult = (fileNo) => {
     navigate(`/list/${fileNo}`, { state: { id: fileNo } });
   };
 
@@ -103,7 +103,7 @@ export const FileListPage = () => {
                   <td>{file[2]}</td>
                   <td>완료</td>
                   <td>
-                    <button onClick={() => moveToResult(fileList.length - index, file[3])}>
+                    <button onClick={() => moveToResult(file[3])}>
                       보기
                     </button>
                   </td>
