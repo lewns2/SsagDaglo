@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-// const baseURL = 'http://localhost:8080';
-const baseURL = 'https://api.ssagdaglo.cf';
+const baseURL = 'http://localhost:8080';
+// const baseURL = 'https://api.ssagdaglo.cf';
 
 // 1. 해당 유저 파일 목록 조회
 const reqFiles = async (userNickName, selectedPage) => {
   let result;
   try {
     await axios
-      .get(`${baseURL}/file/list/findAll/${userNickName}?page=${selectedPage - 1}&size=7`)
+      .get(`${baseURL}/file/findAll/${userNickName}?page=${selectedPage - 1}&size=6`)
       .then((res) => (result = res.data))
       .catch((err) => console.log(err));
   } catch {
@@ -23,10 +23,10 @@ const reqFileInfo = async (fileNum) => {
   let result;
   try {
     await axios
-      .get(`${baseURL}/file/list/find/${fileNum}`)
+      .get(`${baseURL}/file/find/${fileNum}`)
       .then((res) => {
         console.log(res);
-        (res.data.status === "sucess" ? result = res.data : result = false);
+        res.data.status === 'sucess' ? (result = res.data) : (result = false);
       })
       .catch((err) => console.log(err));
   } catch {

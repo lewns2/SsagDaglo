@@ -110,7 +110,6 @@ public class FileService {
 
         String originName = file.getOriginalFilename();
 
-
         String uuid = UUID.randomUUID().toString();
 
         // S3 업로드 기본 정보
@@ -132,6 +131,7 @@ public class FileService {
             FileEntity fileEntity = FileEntity.builder()
                     .originPath("s3://" + bucketName + "/" + fileObjKeyName) // * S3 url
                     .filename(originName)
+                    .uuid(uuid)
                     .user(userRepository.findByUserNickName(userNickName).get())
                     .build();
 
@@ -156,7 +156,8 @@ public class FileService {
     // S3 결과 파일 조회 함수
     public String getObject(Integer fileNum) throws IOException {
 //        String fileObjKeyName = userNickName +"/input_files/" + uuid + originName;
-        // 1. 유저 닉네임, uuid, 파일이름 가져오기 == userNickName + "/output_files/" + uuid + "_" + fileName;
+        /* userNickName + "/output_files/" + uuid + "_" + fileName;
+         파일 번호 -> 유저 이메일 -> 유저 닉네임, uuid 가져오기, 파일이름 가져오기 */
 
         String key = "asd/output_files/jobName (3).txt";
 

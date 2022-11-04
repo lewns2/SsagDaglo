@@ -11,7 +11,6 @@
   justify-content: flex-end;
 }
 
-
 /* 페이지네이션 */
 .paginationWrap {
   display: flex;
@@ -22,7 +21,7 @@
     margin: 0;
     padding: 0;
     position: fixed;
-    bottom: 20%;
+    bottom: 10%;
   }
 
   .pagination > li {
@@ -54,7 +53,6 @@
     transform: revert;
   }
 }
-
 
 /* 파일 조회 목록 - 게시판 */
 .board-table {

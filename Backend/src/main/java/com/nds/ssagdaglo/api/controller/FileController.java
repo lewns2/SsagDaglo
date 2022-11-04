@@ -28,12 +28,10 @@ public class FileController {
 
     // S3 파일 업로드 - 오디오 파일
     @CrossOrigin(origins="*", allowedHeaders = "*")
-    @PostMapping("/upload/file")
+    @PostMapping("/upload/audio")
     public ApiResponse<?> uploadFile(@RequestPart(value = "key")FileDto.FileResisterReq userNickname, @RequestPart("file") MultipartFile file) throws IOException {
         Boolean isSuccess;
         try {
-//            fileService.saveFile(file, userNickname.getUserNickname());
-//            isSuccess = fileService.uploadObject(file, userNickname.getUserNickname());
             isSuccess = fileService.localFileSave(file, userNickname.getUserNickname());
         }
         catch (Exception e) {
@@ -46,18 +44,10 @@ public class FileController {
 
     // S3 파일 업로드 - 유튜브 링크
     @CrossOrigin(origins="*", allowedHeaders = "*")
-    @PostMapping("/upload/link")
+    @PostMapping("/upload/youtube")
     public ApiResponse<?> uploadLink(@RequestBody List<String> link) throws IOException {
         Boolean isSuccess;
         try {
-//            URL url = new URL(link[0]);
-//            System.out.println(userNickname);
-//            System.out.println(userNickname);
-//            System.out.println(userNickname);
-            System.out.println(link);
-            System.out.println(link);
-            System.out.println(link);
-//            isSuccess = fileService.convertAudio(link, userNickname);
             isSuccess = fileService.convertAudio(link);
         }
         catch (Exception e) {
@@ -70,7 +60,7 @@ public class FileController {
 
 
     // S3 파일 조회
-    @GetMapping("/list/find/{fileNum}")
+    @GetMapping("/find/{fileNum}")
     public ApiResponse<?> getFile(@PathVariable(name = "fileNum") Integer fileNum) throws IOException {
         String res = "false" ;
         try {
@@ -83,8 +73,8 @@ public class FileController {
     }
 
     // 특정 유저의 파일 목록 조회 + 페이징 처리
-    @GetMapping("/list/findAll/{userNickName}")
-    public ApiResponse<?> getFileList(@PathVariable String userNickName, @PageableDefault(page=0, size=5, sort = "fileNo", direction = Sort.Direction.DESC) Pageable pagealbe) {
+    @GetMapping("/findAll/{userNickName}")
+    public ApiResponse<?> getFileList(@PathVariable String userNickName, @PageableDefault(page=0, size=6, sort = "fileNo", direction = Sort.Direction.DESC) Pageable pagealbe) {
         FileDto.UserFileListRes userFileListRes;
 
         try {
