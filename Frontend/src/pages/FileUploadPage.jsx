@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Header from '../components/Header';
-import * as useFetchAudio from '../apis/FetchAudio';
+import * as FetchReqUploadFile from '../apis/FetchReqUploadFile';
 import Alert from '../components/Alert';
 
 import '../style/FileUploadPage.scss';
@@ -66,7 +66,7 @@ export const FileUploadPage = () => {
       );
       formData.append('file', uploadAudio);
       for (const keyValue of formData) console.log(keyValue);
-      let response = useFetchAudio.reqUploadAudio(formData);
+      let response = FetchReqUploadFile.reqUploadAudio(formData);
       response.then((res) => {
         if (res === true) navigate('/list');
       });
@@ -74,7 +74,11 @@ export const FileUploadPage = () => {
 
     // 유튜브 링크 전송
     else if (selectedUploadType === 'link') {
-      //   console.log(givenYoutubeLink);
+      console.log(testAudio);
+      let response = FetchReqUploadFile.reqUploadLink(sessionStorage.getItem('userNickName'), testAudio, youtubeVidInfos.title);
+      response.then((res) => {
+        if (res === true) navigate('/list');
+      });
     }
   };
 
@@ -87,7 +91,7 @@ export const FileUploadPage = () => {
       if (url[2] !== undefined) {
         url = url[2].split(/[^0-9a-z_-]/i)[0];
 
-        let response = useFetchAudio.reqYoutubeInfos(url);
+        let response = FetchReqUploadFile.reqYoutubeInfos(url);
         response.then((res) => {
           //   console.log(res);
           setYoutubeVidInfos({
@@ -184,6 +188,11 @@ export const FileUploadPage = () => {
       });
     });
   };
+
+  const createDownload = () => {
+    document.querySelector('audio').setAttribute('download');
+    
+  }
 
   useEffect(() => {
     // console.log(givenYoutubeLink);

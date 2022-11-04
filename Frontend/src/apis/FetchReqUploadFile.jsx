@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const baseURL = 'http://localhost:8080';
-const baseURL = 'https://api.ssagdaglo.cf';
+const baseURL = 'http://localhost:8080';
+// const baseURL = 'https://api.ssagdaglo.cf';
 
 const header = { headers: { 'Content-Type': 'multipart/form-data' } };
 
@@ -10,7 +10,7 @@ const reqUploadAudio = async (data) => {
   let result = null;
 
   try {
-    await axios.post(`${baseURL}/upload`, data, header).then((res) => {
+    await axios.post(`${baseURL}/upload/file`, data, header).then((res) => {
       console.log(res);
       (res.data.status === "sucess" ? result = true : result = false )
     });
@@ -22,7 +22,27 @@ const reqUploadAudio = async (data) => {
   }
 };
 
-// 2. 유튜브 동영상 정보 요청 API
+// 2. 유튜브 링크 전송 API
+const reqUploadLink = async (userNickName, data, title) => {
+
+  let result = null;
+  let temp = [data, userNickName, title];
+
+  try {
+    console.log(temp);
+    await axios.post(`${baseURL}/upload/link`, temp).then((res) => {
+      console.log(res);
+      (res.data.status === "sucess" ? result = true : result = false )
+    });
+
+    return result;
+  } catch (error) {
+    console.log('오디오 요청 에러 : ', error);
+    return error;
+  }
+}
+
+// 3. 유튜브 동영상 정보 요청 API
 const reqYoutubeInfos = async (data) => {
   let result = null;
   console.log(data);
@@ -46,4 +66,4 @@ const reqYoutubeInfos = async (data) => {
   }
 };
 
-export { reqUploadAudio, reqYoutubeInfos };
+export { reqUploadAudio, reqUploadLink, reqYoutubeInfos };

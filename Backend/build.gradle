@@ -51,6 +51,10 @@ dependencies {
 	// AWS S3
 	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
 	implementation 'com.amazonaws:aws-java-sdk-s3'
+
+	// For convert file to multipartfile
+	implementation 'commons-fileupload:commons-fileupload:1.4'
+	implementation 'commons-io:commons-io:2.11.0'
 }
 
 tasks.named('test') {
