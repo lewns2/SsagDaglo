@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Header from '../components/Header';
+/* API 모듈 */
 import * as FetchReqUploadFile from '../apis/FetchReqUploadFile';
-import Alert from '../components/Alert';
 
+/* 공통 컴포넌트 및 스타일 */
+import Header from '../components/Header';
+import Alert from '../components/Alert';
+import Container from '../components/Container';
+import Lottie from '../components/Lottie';
 import '../style/FileUploadPage.scss';
 
 export const FileUploadPage = () => {
@@ -20,8 +24,11 @@ export const FileUploadPage = () => {
     thumbnails: '',
   });
   const [testAudio, setTestAudio] = useState();
+  // const [clickNext, setClickNext]
+  const [isYoutubePeding, setIsYoutubePeding] = useState(false);
+  const [isLinkPending, setIsLinkPending] = useState(false);
 
-  // [UX] 카테고리 선택에 따라 보여줄 화면을 핸들링할 데이터
+  /* [UX] 카테고리 선택에 따라 보여줄 화면을 핸들링할 데이터 */ 
   const clickTypeButton = (type) => {
     if (type === 'file') setSelectedUploadType('file');
     else if (type === 'link') {
@@ -31,7 +38,7 @@ export const FileUploadPage = () => {
     }
   };
 
-  // [기능 / UX] 업로드 파일, 변수에 저장 및 음악 재생 기능
+  /* [기능 / UX] 업로드 파일, 변수에 저장 및 음악 재생 기능 */ 
   const onChangeAudio = (e) => {
     if (e.target.files[0]) {
       setUploadAudio(e.target.files[0]);
@@ -53,7 +60,7 @@ export const FileUploadPage = () => {
     }
   };
 
-  // [기능] 파일 업로드 후, 요청 시 서버에 보내줄 form 형태 변환 및 API 요청 / [다음] 버튼 클릭
+  /* [기능] 파일 업로드 후, 요청 시 서버에 보내줄 form 형태 변환 및 API 요청 / [다음] 버튼 클릭 */ 
   const handleRequest = () => {
     // 음성 파일 업로드
     if (selectedUploadType === 'file') {
@@ -72,17 +79,18 @@ export const FileUploadPage = () => {
       });
     }
 
-    // 유튜브 링크 전송
+    /* 유튜브 링크 전송 */ 
     else if (selectedUploadType === 'link') {
       console.log(testAudio);
       let response = FetchReqUploadFile.reqUploadLink(sessionStorage.getItem('userNickName'), testAudio, youtubeVidInfos.title);
       response.then((res) => {
+        setIsYoutubePeding(true);
         if (res === true) navigate('/list');
       });
     }
   };
 
-  // [기능] 유튜브 url 중 video id 파싱 및 api 요청
+  /* [기능] 유튜브 url 중 video id 파싱 및 api 요청 */ 
   const getVideoID = () => {
     if (!givenYoutubeLink) {
       Alert(false, '비디오 링크를 입력해주세요!');
@@ -107,6 +115,7 @@ export const FileUploadPage = () => {
     getAudioFromYoutubeLink();
   };
 
+  /* 유튜브 링크를 통해 오디오 파일 추출 */
   const getAudioFromYoutubeLink = () => {
     fetch(
       'https://images' +
@@ -189,19 +198,13 @@ export const FileUploadPage = () => {
     });
   };
 
-  const createDownload = () => {
-    document.querySelector('audio').setAttribute('download');
-    
-  }
-
   useEffect(() => {
-    // console.log(givenYoutubeLink);
   }, [selectedUploadType, uploadAudio, givenYoutubeLink, youtubeVidInfos]);
 
   return (
     <>
       <Header />
-      <div className="FileUploadContainer">
+      <Container>
         {/* 업로드 타입 선택 카테고리 */}
         <h1>파일 업로드</h1>
         <div className="uploadType">
@@ -254,6 +257,7 @@ export const FileUploadPage = () => {
                       </p>
                     </div>
                     <audio controls src={testAudio}></audio>
+                    {isYoutubePeding === false ? (<LoadingLottie/>) : (<></>)}
                   </>
                 ) : (
                   <div></div>
@@ -272,9 +276,16 @@ export const FileUploadPage = () => {
             다음
           </p>
         </div>
-      </div>
+      </Container>
     </>
   );
 };
+
+const LoadingLottie = (props) => (
+  <Lottie
+    {...props}
+    src= "https://assets4.lottiefiles.com/packages/lf20_qe6rfoqh.json"
+  />
+);
 
 export default FileUploadPage;

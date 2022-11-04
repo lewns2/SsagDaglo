@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
-import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
-import * as useFetchFiles from '../apis/FetchFiles';
-import Alert from '../components/Alert';
 
+/* API 모듈 */
+import * as useFetchFiles from '../apis/FetchFiles';
+
+/* 공통 컴포넌트 및 스타일 */
+import Header from '../components/Header';
+import Alert from '../components/Alert';
+import Container from '../components/Container';
 import '../style/FileListPage.scss';
 
 export const FileListPage = () => {
@@ -12,7 +16,8 @@ export const FileListPage = () => {
   const [totalPages, setTotalPages] = useState();
   const [selectedPage, setSelectedPage] = useState(0);
 
-  // 유저 파일 목록 조회 + 페이지 처리
+
+  /* 유저 파일 목록 조회 + 페이지 처리 */ 
   useEffect(() => {
     let userNickName = sessionStorage.getItem('userNickName');
     let response = useFetchFiles.reqFiles(userNickName, selectedPage);
@@ -23,12 +28,13 @@ export const FileListPage = () => {
     });
   }, [selectedPage]);
 
-  // 결과 페이지 이동 함수
+
+  /* 결과 페이지 이동 함수 */ 
   const moveToResult = (fileNo) => {
     navigate(`/list/${fileNo}`, { state: { id: fileNo } });
   };
 
-  // 페이징 처리 구현 함수
+  /* 페이징 처리 구현 함수 */ 
   const renderPagiantion = (tot) => {
     const result = [];
     for (let i = 1; i <= tot; i++) {
@@ -50,7 +56,7 @@ export const FileListPage = () => {
   return (
     <>
       <Header />
-      <div className="FileListContainer">
+      <Container>
         <div className="FileListHeader">
           <h1>파일 목록</h1>
           <p onClick={() => navigate('/transcribe/file')} style={{ cursor: 'pointer' }}>
@@ -146,7 +152,7 @@ export const FileListPage = () => {
             </li>
           </ul>
         </div>
-      </div>
+      </Container>
     </>
   );
 };
