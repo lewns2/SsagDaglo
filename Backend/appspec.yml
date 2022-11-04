@@ -4,7 +4,7 @@ os: linux
 
 files:
   - source:  / # 현재 프로젝트의 루트 경로
-    destination: /home/ubuntu/deploy/  # EC2 내부 배포 할 위치
+    destination: /home/ec2-user/deploy/  # EC2 내부 배포 할 위치
     overwrite: yes # 덮어쓰기
 
 hooks:
@@ -13,7 +13,7 @@ hooks:
        timeout: 60
 
 permissions:
-  - object: /home/ubuntu/deploy/
+  - object: /home/ec2-user/deploy/
     pattern: "**"
     owner: deploy
-    group: ubuntu
+    group: ec2-user
