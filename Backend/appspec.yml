@@ -16,3 +16,4 @@ permissions:
   - object: /home/ec2-user/deploy/
     pattern: "**"
     owner: root
+
