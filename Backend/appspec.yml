@@ -15,5 +15,4 @@ hooks:
 permissions:
   - object: /home/ec2-user/deploy/
     pattern: "**"
-    owner: deploy
-    group: ec2-user
+    owner: root
