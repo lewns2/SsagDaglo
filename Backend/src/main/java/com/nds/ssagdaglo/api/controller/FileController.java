@@ -21,6 +21,7 @@ import java.util.List;
 @CrossOrigin(origins="*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/file")
 public class FileController {
 
     private final FileService fileService;
@@ -70,7 +71,7 @@ public class FileController {
 
     // S3 파일 조회
     @GetMapping("/list/{fileNum}")
-    public ApiResponse<?> getFile(@PathVariable Integer fileNum) throws IOException {
+    public ApiResponse<?> getFile(@PathVariable(name = "fileNum") Integer fileNum) throws IOException {
         String res = "false" ;
         try {
             res = fileService.getObject(fileNum);

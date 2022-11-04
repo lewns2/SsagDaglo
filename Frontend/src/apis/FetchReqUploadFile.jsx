@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const baseURL = 'http://localhost:8080';
-const baseURL = 'https://api.ssagdaglo.cf';
+const baseURL = 'http://localhost:8080';
+// const baseURL = 'https://api.ssagdaglo.cf';
 
 const header = { headers: { 'Content-Type': 'multipart/form-data' } };
 
@@ -10,7 +10,7 @@ const reqUploadAudio = async (data) => {
   let result = null;
 
   try {
-    await axios.post(`${baseURL}/upload/file`, data, header).then((res) => {
+    await axios.post(`${baseURL}/file/upload/file`, data, header).then((res) => {
       console.log(res);
       (res.data.status === "sucess" ? result = true : result = false )
     });
@@ -30,7 +30,7 @@ const reqUploadLink = async (userNickName, data, title) => {
 
   try {
     console.log(temp);
-    await axios.post(`${baseURL}/upload/link`, temp).then((res) => {
+    await axios.post(`${baseURL}/file/upload/link`, temp).then((res) => {
       console.log(res);
       (res.data.status === "sucess" ? result = true : result = false )
     });
