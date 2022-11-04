@@ -1,7 +1,7 @@
 import axios from "axios"
 
-// const baseURL = 'http://localhost:8080'
-const baseURL = 'https://api.ssagdaglo.cf';
+const baseURL = 'http://localhost:8080'
+// const baseURL = 'https://api.ssagdaglo.cf';
 
 // 1. 회원 가입 요청 API
 const reqSignup = async (data) => {    
@@ -9,7 +9,7 @@ const reqSignup = async (data) => {
     try {
         let result;
 
-        await axios.post(`${baseURL}/signup`, data)
+        await axios.post(`${baseURL}/user/signup`, data)
         .then((res) => {
             res.data.status === "sucess" ? result = true : result = false
         }); 
@@ -26,7 +26,7 @@ const reqSignup = async (data) => {
 const reqLogin = async (data) => {
     try {
         let result;
-        await axios.post(`${baseURL}/login`, data)
+        await axios.post(`${baseURL}/user/login`, data)
         .then((res) =>{
 
             result = res.data;
@@ -48,7 +48,7 @@ const reqCheckNickName = async (data) => {
     try {
         let result;
 
-        await axios.post(`${baseURL}/chknickname`, data, {headers : {'Content-Type': 'application/json'}})
+        await axios.post(`${baseURL}/user/chknickname`, data, {headers : {'Content-Type': 'application/json'}})
         .then((res) =>
         {   
             res.data.status === "sucess"? result = true : result = false}
@@ -66,7 +66,7 @@ const reqCheckEmail = async (data) => {
     try {
         let result;
 
-        await axios.post(`${baseURL}/chkemail`, data, {headers : {'Content-Type': 'application/json'}})
+        await axios.post(`${baseURL}/user/chkemail`, data, {headers : {'Content-Type': 'application/json'}})
         .then((res) => {
             res.data.status === "sucess" ? result = true : result = false
         }); 
