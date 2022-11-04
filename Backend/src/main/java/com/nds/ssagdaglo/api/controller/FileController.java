@@ -70,7 +70,7 @@ public class FileController {
 
 
     // S3 파일 조회
-    @GetMapping("/list/{fileNum}")
+    @GetMapping("/list/find/{fileNum}")
     public ApiResponse<?> getFile(@PathVariable(name = "fileNum") Integer fileNum) throws IOException {
         String res = "false" ;
         try {
