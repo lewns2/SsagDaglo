@@ -47,6 +47,12 @@ public class FileEntity {
     @Column
     private String outputFilename;
 
+    @Column
+    private String uuid;
+
+    @Column
+    private String transcribe_name;
+
     @CreatedDate
     private LocalDate createdDate;
 
