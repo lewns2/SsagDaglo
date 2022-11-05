@@ -17,5 +17,6 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
 //    @Query(value = "select f from fileentitiy f inner join fetch f.user u where u.userEmail = :userEmail", nativeQuery = true)
 //    @Query(value = "select f from fileentitiy f inner join fetch f.user u where u.userEmail = :userEmail", nativeQuery = true)
     public Page<FileEntity> findAllByUserUserEmail(@Param("userEmail") String userEmail, Pageable pageable);
-//    public Optional<FileEntity> findUuidById(Long fileNo);
+    public Optional<FileEntity> findAllByFileNo(Long fileNo);
+
 }
