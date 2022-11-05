@@ -158,9 +158,18 @@ public class FileService {
 //        String fileObjKeyName = userNickName +"/input_files/" + uuid + originName;
         /* userNickName + "/output_files/" + uuid + "_" + fileName;
          파일 번호 -> 유저 이메일 -> 유저 닉네임, uuid 가져오기, 파일이름 가져오기 */
-//        Optional<FileEntity> uuid = fileRepository.findUuidById(fileNum).get();
+
+        FileEntity files = fileRepository.findAllByFileNo(fileNum).get();
+        String userNickName = files.getUser().getUserNickName();
+        String originName = files.getFilename();
+        String uuid = files.getUuid();
+
+        System.out.println("uuid ===== " + files.getUuid());
+        System.out.println("originName ===== " + files.getFilename());
+        System.out.println("userNickName ===== " + files.getUser().getUserNickName());
 
         String key = "asd/output_files/jobName (3).txt";
+//        String key = userNickName + "/output_files/" + uuid + originName;
 
         S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
 
