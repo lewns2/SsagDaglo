@@ -54,14 +54,13 @@ public class FileController {
             e.printStackTrace();
             return ApiResponse.createError("파일 업로드 중 문제가 발생했습니다.");
         }
-//        return ApiResponse.createSuccessWithNoContent();
         return (isSuccess ? ApiResponse.createSuccessWithNoContent() : ApiResponse.createError("파일 업로드 중 문제가 발생했습니다."));
     }
 
 
     // S3 파일 조회
     @GetMapping("/find/{fileNum}")
-    public ApiResponse<?> getFile(@PathVariable(name = "fileNum") Integer fileNum) throws IOException {
+    public ApiResponse<?> getFile(@PathVariable(name = "fileNum") Long fileNum) throws IOException {
         String res = "false" ;
         try {
             res = fileService.getObject(fileNum);

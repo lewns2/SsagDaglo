@@ -154,10 +154,11 @@ public class FileService {
     }
 
     // S3 결과 파일 조회 함수
-    public String getObject(Integer fileNum) throws IOException {
+    public String getObject(Long fileNum) throws IOException {
 //        String fileObjKeyName = userNickName +"/input_files/" + uuid + originName;
         /* userNickName + "/output_files/" + uuid + "_" + fileName;
          파일 번호 -> 유저 이메일 -> 유저 닉네임, uuid 가져오기, 파일이름 가져오기 */
+//        Optional<FileEntity> uuid = fileRepository.findUuidById(fileNum).get();
 
         String key = "asd/output_files/jobName (3).txt";
 
