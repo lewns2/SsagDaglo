@@ -15,5 +15,5 @@ hooks:
 permissions:
   - object: /home/ec2-user/deploy/
     pattern: "**"
-    owner: root
+    owner: ec2-user
 
