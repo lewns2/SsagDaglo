@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import ReactPlayer from 'react-player';
 
 /* API 모듈 */
 import * as useFetchFiles from '../apis/FetchFiles';
@@ -15,17 +16,22 @@ export const FileResultPage = () => {
   const loaction = useLocation();
 
   const [fileNum, setFileNum] = useState();
+  const [fileTitle, setFileTitle] = useState();
   const [isPending, setIsPending] = useState(false);
   const [fileResult, setFileResult] = useState();
+  const [videoUrl, setVideoUrl] = useState();
 
   useEffect(() => {
     /* 상세 파일 데이터 요청 */
     setFileNum(loaction.state.id);
+    setFileTitle(loaction.state.title);
+    console.log(loaction.state);
     let response = useFetchFiles.reqFileInfo(loaction.state.id);
     response.then((res) => {
       console.log(res);
       setIsPending(true);
-      setFileResult(res.data);
+      setFileResult(res.data.script);
+      setVideoUrl(res.data.youtubeUrl);
     });
   }, []);
 
@@ -38,13 +44,27 @@ export const FileResultPage = () => {
             <h1>결과물</h1>
             {isPending ? (
               <>
-                <div>파일번호 : {fileNum}</div>
+                <div>{fileTitle}</div>
                 <div className="fileResultContent">{fileResult}</div>
+                <div
+                  style={{
+                    position: 'fixed',
+                    left: '0',
+                    bottom: '0',
+                  }}>
+                  <ReactPlayer
+                    url={videoUrl}
+                    width="300px"
+                    height="200px"
+                    playing={false}
+                    muted={true}
+                    controls={true}></ReactPlayer>
+                </div>
               </>
             ) : (
               <>
-              <p>결과를 불러오고 있어요!</p>
-                <div style={{maxWidth:'70%', display:'flex', margin: 'auto'}}>
+                <p>결과를 불러오고 있어요!</p>
+                <div style={{ maxWidth: '70%', display: 'flex', margin: 'auto' }}>
                   <LoadingLottie />
                 </div>
               </>

@@ -79,6 +79,7 @@ export const FileUploadPage = () => {
         sessionStorage.getItem('userNickName'),
         testAudio,
         youtubeVidInfos.title,
+        givenYoutubeLink,
       );
       response.then((res) => {
         setIsYoutubePeding(true);
@@ -231,10 +232,7 @@ export const FileUploadPage = () => {
                     <p>첨부파일은 최대 1개, 30MB까지 등록 가능합니다.</p>
                   </>
                 )}
-
-                    
               </div>
-              
             ) : (
               <>
                 <div className="youtubeLinkWrapper">
@@ -254,28 +252,29 @@ export const FileUploadPage = () => {
                     <>
                       {clickNext && isAudioPending === false ? (
                         <>
-                        <p>파일을 처리하고 있어요! 조금만 기다려주세요</p>
-                        <div style={{maxWidth:'50%', display:'flex', margin: 'auto'}}>
-                          <YoutubeLoadingLottie />
-                        </div>
+                          <p>영상을 다운로드 중이예요! 조금만 기다려주세요</p>
+                          <div style={{ maxWidth: '50%', display: 'flex', margin: 'auto' }}>
+                            <YoutubeLoadingLottie />
+                          </div>
                         </>
                       ) : (
                         <>
-                        <div className="youtubeInfos">
-                          <div>
-                            <img
-                              src={youtubeVidInfos.thumbnails ? youtubeVidInfos.thumbnails : ''}
-                              alt="썸네일"
-                              style={{width : '60%'}}
-                              ></img>
+                          <div className="youtubeInfos">
+                            <div>
+                              <img
+                                src={youtubeVidInfos.thumbnails ? youtubeVidInfos.thumbnails : ''}
+                                alt="썸네일"
+                                style={{ width: '60%' }}></img>
+                            </div>
+                            <div>
+                              <p style={{ float: 'left' }}>
+                                {youtubeVidInfos.title ? youtubeVidInfos.title : ''}
+                              </p>
+                              <p style={{ float: 'left' }}>
+                                {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <p style={{float: 'left'}}>{youtubeVidInfos.title ? youtubeVidInfos.title : ''}</p>
-                            <p style={{float: 'left'}}>
-                              {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}
-                            </p>
-                          </div>
-                        </div>
                           <audio controls src={testAudio}></audio>
                         </>
                       )}

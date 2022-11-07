@@ -60,14 +60,15 @@ public class FileController {
     // S3 파일 조회
     @GetMapping("/find/{fileNum}")
     public ApiResponse<?> getFile(@PathVariable(name = "fileNum") Long fileNum) throws IOException {
-        String res = "false" ;
+        FileDto.FileResultRes fileResultRes;
         try {
-            res = fileService.getObject(fileNum);
+            fileResultRes = fileService.getObject(fileNum);
         }
         catch(Exception e) {
             e.printStackTrace();
+            return ApiResponse.createError("파일 결과 조회 중 문제가 발생했습니다.");
         }
-        return (res != "false" ? ApiResponse.createSuccess(res) : ApiResponse.createError("결과 파일 조회 중 에러가 발생했습니다."));
+        return ApiResponse.createSuccess(fileResultRes);
     }
 
     // 특정 유저의 파일 목록 조회 + 페이징 처리
