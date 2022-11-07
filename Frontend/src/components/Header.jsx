@@ -25,7 +25,7 @@ export const Header = () => {
     return (
         <div className="header">
             
-            <img src={logoImage} onClick={() => navigate('/')} alt="로고" style={{cursor : 'pointer'}}/>
+            <img src={logoImage} onClick={() => navigate('/')} alt="로고" style={{cursor : 'pointer', width:'200px'}}/>
             
             { !isLoin ? (
                     <div  className="navMenu">

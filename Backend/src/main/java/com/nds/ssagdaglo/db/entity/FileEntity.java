@@ -53,6 +53,9 @@ public class FileEntity {
     @Column
     private String transcribe_name;
 
+    @Column
+    private String status;
+
     @CreatedDate
     private LocalDate createdDate;
 

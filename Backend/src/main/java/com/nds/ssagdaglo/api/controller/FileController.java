@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 @CrossOrigin(origins="*", allowedHeaders = "*")
