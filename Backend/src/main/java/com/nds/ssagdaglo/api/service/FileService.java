@@ -24,6 +24,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -52,7 +53,6 @@ public class FileService {
 
     // S3 공통 정보
     Regions clientRegion = Regions.AP_NORTHEAST_2;
-    String bucketName = "sdgl-files-bucket";
 
     // 유효한 파일 이름으로 변환
     public static String getValidFileName(String fileName) {
@@ -105,6 +105,7 @@ public class FileService {
 
     // S3 업로드 함수
     private Boolean uploadObject(MultipartFile file, String userNickName) throws IOException {
+        String bucketName = "sdgl-files-bucket";
 
         String localSavedPath = System.getProperty("user.dir") + "\\upload";
 
@@ -158,18 +159,19 @@ public class FileService {
 //        String fileObjKeyName = userNickName +"/input_files/" + uuid + originName;
         /* userNickName + "/output_files/" + uuid + "_" + fileName;
          파일 번호 -> 유저 이메일 -> 유저 닉네임, uuid 가져오기, 파일이름 가져오기 */
-
+        String bucketName = "sdgl-files-bucket-output";
         FileEntity files = fileRepository.findAllByFileNo(fileNum).get();
         String userNickName = files.getUser().getUserNickName();
         String originName = files.getFilename();
+        String transcribeName = files.getTranscribe_name();
         String uuid = files.getUuid();
 
         System.out.println("uuid ===== " + files.getUuid());
         System.out.println("originName ===== " + files.getFilename());
         System.out.println("userNickName ===== " + files.getUser().getUserNickName());
 
-        String key = "asd/output_files/jobName (3).txt";
-//        String key = userNickName + "/output_files/" + uuid + originName;
+//        String key = "asd/output_files/e93afd8c-0bc1-4f95-8431-58ccce810dc4_eSIM_clip.mp3.txt";
+        String key = userNickName + "/output_files/" + transcribeName + ".txt";
 
         S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
 
@@ -182,13 +184,12 @@ public class FileService {
 
             System.out.println("Downloading an object");
             fullObject = s3Client.getObject(new GetObjectRequest(bucketName, key));
-            System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
-            System.out.println("Content: ");
+//            System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
+//            System.out.println("Content: ");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fullObject.getObjectContent()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fullObject.getObjectContent(), "utf-8"));
 
             String line = null;
-
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append("\n");
             }
@@ -213,19 +214,6 @@ public class FileService {
             if (headerOverrideObject != null) {
                 headerOverrideObject.close();
             }
-        }
-
-        return sb.toString();
-    }
-
-    private static String displayTextInputStream(InputStream input) throws IOException {
-        // Read the text input stream one line at a time and display each line.
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        StringBuilder sb = new StringBuilder("");
-        String line = null;
-
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append("\n");
         }
 
         return sb.toString();
