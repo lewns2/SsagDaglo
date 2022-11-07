@@ -237,14 +237,16 @@ public class FileService {
             List<String> fileInfo = new ArrayList<>();
             String userFileName = fileEntityResToList.get(i).getFilename();
             Long userFileNum = fileEntityResToList.get(i).getFileNo();
+            String status = fileEntityResToList.get(i).getStatus();
             fileInfo.add(userFileName);
             fileInfo.add(String.valueOf(fileEntityResToList.get(i).getCreatedDate()));
             fileInfo.add(String.valueOf(fileEntityResToList.get(i).getUpdateDate()));
             fileInfo.add(String.valueOf(userFileNum));
+            fileInfo.add(status);
             data.add(fileInfo);
         }
 
-        // 파일 정보를 담은 2차원 배열 (파일 이름, 파일 번호, 생성일, 수정일)
+        // 파일 정보를 담은 2차원 배열 (파일 이름, 파일 번호, 생성일, 수정일, 상태)
         res.setFileInfo(data);
 
         return res;

@@ -3,7 +3,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+}
+
+.FileContent {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .FileListTool {
@@ -74,11 +79,24 @@
 }
 .board-table th {
   text-align: center;
+  
 }
 
 .board-table .th-num {
   width: 80px;
   text-align: center;
+}
+
+.board-table .th-title {
+  width: 200px;
+  text-align: center;
+}
+.board-table .th-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 5px;
 }
 
 .board-table .th-date {

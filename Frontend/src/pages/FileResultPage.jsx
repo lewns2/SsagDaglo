@@ -43,8 +43,10 @@ export const FileResultPage = () => {
               </>
             ) : (
               <>
-                결과를 불러오고 있어요!
-                <LoadingLottie />
+              <p>결과를 불러오고 있어요!</p>
+                <div style={{maxWidth:'70%', display:'flex', margin: 'auto'}}>
+                  <LoadingLottie />
+                </div>
               </>
             )}
           </div>

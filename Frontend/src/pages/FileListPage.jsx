@@ -9,6 +9,7 @@ import Header from '../components/Header';
 import Alert from '../components/Alert';
 import Container from '../components/Container';
 import Wrapper from '../components/Wrapper';
+import { FcApproval, FcSynchronize, FcHighPriority } from "react-icons/fc";
 import '../style/FileListPage.scss';
 
 export const FileListPage = () => {
@@ -52,16 +53,31 @@ export const FileListPage = () => {
     return result;
   };
 
+  // 새로고침
+  const getStatus = () => {
+    let userNickName = sessionStorage.getItem('userNickName');
+    let response = useFetchFiles.reqFiles(userNickName, selectedPage);
+    response.then((res) => {
+      console.log(res);
+      setFileList(res.data.fileInfo);
+    });
+  }
+
   return (
     <>
       <Header />
       <Container>
         <Wrapper>
           <div className="FileListHeader">
-            <h1>파일 목록</h1>
+            <p>파일 목록</p>
+          </div>
+
+          {/* 파일 업로드 및 새로고침 */}
+          <div className = "FileContent">
             <p onClick={() => navigate('/transcribe/file')} style={{ cursor: 'pointer' }}>
-              파일 업로드
+                파일 업로드
             </p>
+            
           </div>
 
           {/* 파일 목록 영역 */}
@@ -71,16 +87,14 @@ export const FileListPage = () => {
                 <th scope="col" className="th-num">
                   번호
                 </th>
-                <th scope="col" className="th-tiçtle">
+                <th scope="col" className="th-title">
                   제목
                 </th>
                 <th scope="col" className="th-date">
                   등록일
                 </th>
-                <th scope="col" className="th-date">
-                  수정일
-                </th>
                 <th scope="col" className="th-status">
+                <FcSynchronize onClick={() => getStatus()} style={{cursor : 'pointer'}} size={18}/>
                   상태
                 </th>
                 <th scope="col" className="th-result">
@@ -106,8 +120,7 @@ export const FileListPage = () => {
                       </div>
                     </th>
                     <td>{file[1]}</td>
-                    <td>{file[2]}</td>
-                    <td>완료</td>
+                    <td>{(file[4] === "COMPLETED" ? <FcApproval size={20}/> : (file[4] === "FAILED" ? <FcHighPriority size={20}/> : "진행중..."))}</td>
                     <td>
                       <button onClick={() => moveToResult(file[3])}>보기</button>
                     </td>
