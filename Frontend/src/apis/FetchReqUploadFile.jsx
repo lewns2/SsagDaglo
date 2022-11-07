@@ -23,9 +23,9 @@ const reqUploadAudio = async (data) => {
 };
 
 // 2. 유튜브 링크 전송 API
-const reqUploadLink = async (userNickName, data, title) => {
+const reqUploadLink = async (userNickName, data, title, videoUrl) => {
   let result = null;
-  let temp = [data, userNickName, title];
+  let temp = [data, userNickName, title, videoUrl];
 
   try {
     console.log(temp);

@@ -72,7 +72,7 @@ public class FileService {
         File Folder = new File(savedPath);
         Folder.mkdir();
         file.transferTo(new java.io.File(savedPath + "/" + originName));
-        return uploadObject(file, userNickName);
+        return uploadObject(file, userNickName, null);
     }
 
     // 유튜브 링크를 통해 로컬에 파일 저장
@@ -82,20 +82,21 @@ public class FileService {
             URL url = new URL(address.get(0));
             String userNickName = address.get(1);
             String title = getValidFileName(address.get(2));
+            String youtubeUrl = address.get(3);
 
             ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-            FileOutputStream fos = new FileOutputStream(System.getProperty("user.dir") + "\\upload/" + title +".mp3"); //다운받을 경로 설정
+            FileOutputStream fos = new FileOutputStream(System.getProperty("user.dir") + "\\upload/" + title +".mp4"); //다운받을 경로 설정
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);  // 처음부터 끝까지 다운로드
             fos.close();
 
             System.out.println("파일 다운완료");
-            File file = new File(System.getProperty("user.dir") + "\\upload/" + title +".mp3");
+            File file = new File(System.getProperty("user.dir") + "\\upload/" + title +".mp4");
             FileItem fileItem = new DiskFileItem("originFile", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length(), file.getParentFile());
             InputStream input = new FileInputStream(file);
             OutputStream os = fileItem.getOutputStream();
             IOUtils.copy(input, os);
             MultipartFile mFile = new CommonsMultipartFile(fileItem);
-            return uploadObject(mFile, userNickName);
+            return uploadObject(mFile, userNickName, youtubeUrl);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +105,7 @@ public class FileService {
     }
 
     // S3 업로드 함수
-    private Boolean uploadObject(MultipartFile file, String userNickName) throws IOException {
+    private Boolean uploadObject(MultipartFile file, String userNickName, String youtubeUrl) throws IOException {
         String bucketName = "sdgl-files-bucket";
 
         String localSavedPath = System.getProperty("user.dir") + "\\upload";
@@ -134,6 +135,7 @@ public class FileService {
                     .filename(originName)
                     .uuid(uuid)
                     .user(userRepository.findByUserNickName(userNickName).get())
+                    .videoUrl(youtubeUrl)
                     .build();
 
             fileRepository.save(fileEntity);
@@ -155,16 +157,15 @@ public class FileService {
     }
 
     // S3 결과 파일 조회 함수
-    public String getObject(Long fileNum) throws IOException {
+    public FileDto.FileResultRes getObject(Long fileNum) throws IOException {
 //        String fileObjKeyName = userNickName +"/input_files/" + uuid + originName;
         /* userNickName + "/output_files/" + uuid + "_" + fileName;
          파일 번호 -> 유저 이메일 -> 유저 닉네임, uuid 가져오기, 파일이름 가져오기 */
         String bucketName = "sdgl-files-bucket-output";
         FileEntity files = fileRepository.findAllByFileNo(fileNum).get();
         String userNickName = files.getUser().getUserNickName();
-        String originName = files.getFilename();
         String transcribeName = files.getTranscribe_name();
-        String uuid = files.getUuid();
+        String videoUrl = files.getVideoUrl();
 
         System.out.println("uuid ===== " + files.getUuid());
         System.out.println("originName ===== " + files.getFilename());
@@ -191,6 +192,8 @@ public class FileService {
 
             String line = null;
             while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+                System.out.println(line);
                 sb.append(line).append("\n");
             }
 
@@ -215,8 +218,11 @@ public class FileService {
                 headerOverrideObject.close();
             }
         }
+        FileDto.FileResultRes res = new FileDto.FileResultRes();
+        res.setScript(sb.toString());
+        res.setYoutubeUrl(videoUrl);
 
-        return sb.toString();
+        return res;
     }
 
     // 특정 사용자의 파일 목록을 조회하는 함수

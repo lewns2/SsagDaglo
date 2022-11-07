@@ -35,5 +35,4 @@ const reqFileInfo = async (fileNum) => {
   return result;
 };
 
-
 export { reqFiles, reqFileInfo };
