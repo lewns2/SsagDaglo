@@ -27,5 +27,12 @@ public class FileDto {
         List<List> fileInfo;
     }
 
+    // 결과 파일 조회를 위한 DTO (응답 : 대본, 요약, 비디오 링크)
+    @Data
+    public static class FileResultRes {
+        String script;
+        String youtubeUrl;
+    }
+
 
 }
