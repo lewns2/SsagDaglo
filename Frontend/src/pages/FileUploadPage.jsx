@@ -52,16 +52,6 @@ export const FileUploadPage = () => {
     setGivenYoutubeLink(e.target.value);
   };
 
-  const handlePlay = (isPlay) => {
-    let playAudio = new Audio(uploadAudio);
-    if (uploadAudio && isPlay) {
-      playAudio.play();
-    } else {
-      playAudio.pause();
-      playAudio = null;
-    }
-  };
-
   /* [기능] 파일 업로드 후, 요청 시 서버에 보내줄 form 형태 변환 및 API 요청 / [다음] 버튼 클릭 */
   const handleRequest = () => {
     setClickNext(true);
@@ -213,7 +203,6 @@ export const FileUploadPage = () => {
       <Container>
         <Wrapper>
           {/* 업로드 타입 선택 카테고리 */}
-          <h1>파일 업로드</h1>
           <div className="uploadType">
             <div>
               <p style={{ cursor: 'pointer' }} onClick={() => clickTypeButton('file')}>
@@ -239,14 +228,13 @@ export const FileUploadPage = () => {
                 ) : (
                   <>
                     <input type="file" accept="audio/*" onChange={onChangeAudio} />
-                    <div className="audioController" style={{ display: isVisible ? '' : 'none' }}>
-                      <button onClick={() => handlePlay(true)}>Play</button>
-                      <button onClick={() => handlePlay(false)}>Pause</button>
-                    </div>
                     <p>첨부파일은 최대 1개, 30MB까지 등록 가능합니다.</p>
                   </>
                 )}
+
+                    
               </div>
+              
             ) : (
               <>
                 <div className="youtubeLinkWrapper">
@@ -266,23 +254,28 @@ export const FileUploadPage = () => {
                     <>
                       {clickNext && isAudioPending === false ? (
                         <>
-                          파일을 처리하고 있어요! 조금만 기다려주세요
+                        <p>파일을 처리하고 있어요! 조금만 기다려주세요</p>
+                        <div style={{maxWidth:'50%', display:'flex', margin: 'auto'}}>
                           <YoutubeLoadingLottie />
+                        </div>
                         </>
                       ) : (
                         <>
+                        <div className="youtubeInfos">
                           <div>
                             <img
                               src={youtubeVidInfos.thumbnails ? youtubeVidInfos.thumbnails : ''}
-                              alt="썸네일"></img>
+                              alt="썸네일"
+                              style={{width : '60%'}}
+                              ></img>
                           </div>
                           <div>
-                            <p>제목 : {youtubeVidInfos.title ? youtubeVidInfos.title : ''}</p>
-                            <p>
-                              작성자 :{' '}
+                            <p style={{float: 'left'}}>{youtubeVidInfos.title ? youtubeVidInfos.title : ''}</p>
+                            <p style={{float: 'left'}}>
                               {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}
                             </p>
                           </div>
+                        </div>
                           <audio controls src={testAudio}></audio>
                         </>
                       )}

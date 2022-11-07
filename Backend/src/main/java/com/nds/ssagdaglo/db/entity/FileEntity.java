@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-@EntityListeners(AuditingEntityListener.class)
 @Table(name="storage")
 @Entity(name="file")
 public class FileEntity {
@@ -52,6 +51,9 @@ public class FileEntity {
 
     @Column
     private String transcribe_name;
+
+    @Column
+    private String status;
 
     @CreatedDate
     private LocalDate createdDate;
