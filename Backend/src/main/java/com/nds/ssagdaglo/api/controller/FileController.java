@@ -28,7 +28,6 @@ public class FileController {
     private final FileService fileService;
 
     // S3 파일 업로드 - 오디오 파일
-    @CrossOrigin(origins="*", allowedHeaders = "*")
     @PostMapping("/upload/audio")
     public ApiResponse<?> uploadFile(@RequestPart(value = "key")FileDto.FileResisterReq userNickname, @RequestPart("file") MultipartFile file) throws IOException {
         Boolean isSuccess;
@@ -44,7 +43,6 @@ public class FileController {
     }
 
     // S3 파일 업로드 - 유튜브 링크
-    @CrossOrigin(origins="*", allowedHeaders = "*")
     @PostMapping("/upload/youtube")
     public ApiResponse<?> uploadLink(@RequestBody List<String> link) throws IOException {
         Boolean isSuccess;
