@@ -68,13 +68,13 @@ public class FileService {
     // 사용자별 upload 폴더 생성 + 파일 저장
     public Boolean localFileSave(MultipartFile file, String userNickName) throws IOException {
 //        String savedPath = System.getProperty("user.dir") + "\\upload";
-        String savedPath = "/var/lib/nginx/tmp/client_body/";
+        String savedPath = "/var/app/current/upload";
         System.out.println(savedPath);
         System.out.println(savedPath);
         System.out.println(savedPath);
         String originName = file.getOriginalFilename();
-        File Folder = new File(savedPath);
-        Folder.mkdir();
+//        File Folder = new File(savedPath);
+//        Folder.mkdir();
         file.transferTo(new java.io.File(savedPath + "/" + originName));
         return uploadObject(file, userNickName, null);
     }
@@ -87,7 +87,7 @@ public class FileService {
             String userNickName = address.get(1);
             String title = getValidFileName(address.get(2));
             String youtubeUrl = address.get(3);
-            String savedPath = "/var/lib/nginx/tmp/client_body/";
+            String savedPath = "/var/app/current/upload";
 
             ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 //            FileOutputStream fos = new FileOutputStream(System.getProperty("user.dir") + "\\upload/" + title +".mp4"); //다운받을 경로 설정
@@ -116,8 +116,7 @@ public class FileService {
         String bucketName = "sdgl-files-bucket";
 
 //        String localSavedPath = System.getProperty("user.dir") + "\\upload";
-        String localSavedPath = "/var/lib/nginx/tmp/client_body/";
-//        String localSavedPath = System.getProperty("user.dir") + "\\upload";
+        String localSavedPath = "/var/app/current/upload";
 
         String originName = file.getOriginalFilename();
 
