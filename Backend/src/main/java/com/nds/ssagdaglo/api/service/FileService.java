@@ -67,7 +67,11 @@ public class FileService {
 
     // 사용자별 upload 폴더 생성 + 파일 저장
     public Boolean localFileSave(MultipartFile file, String userNickName) throws IOException {
-        String savedPath = System.getProperty("user.dir") + "\\upload";
+//        String savedPath = System.getProperty("user.dir") + "\\upload";
+        String savedPath = "/var/lib/nginx/tmp/client_body/";
+        System.out.println(savedPath);
+        System.out.println(savedPath);
+        System.out.println(savedPath);
         String originName = file.getOriginalFilename();
         File Folder = new File(savedPath);
         Folder.mkdir();
@@ -83,14 +87,17 @@ public class FileService {
             String userNickName = address.get(1);
             String title = getValidFileName(address.get(2));
             String youtubeUrl = address.get(3);
+            String savedPath = "/var/lib/nginx/tmp/client_body/";
 
             ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-            FileOutputStream fos = new FileOutputStream(System.getProperty("user.dir") + "\\upload/" + title +".mp4"); //다운받을 경로 설정
+//            FileOutputStream fos = new FileOutputStream(System.getProperty("user.dir") + "\\upload/" + title +".mp4"); //다운받을 경로 설정
+            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);  // 처음부터 끝까지 다운로드
             fos.close();
 
             System.out.println("파일 다운완료");
-            File file = new File(System.getProperty("user.dir") + "\\upload/" + title +".mp4");
+//            File file = new File(System.getProperty("user.dir") + "\\upload/" + title +".mp4");
+            File file = new File(savedPath + "/" + title + ".mp4");
             FileItem fileItem = new DiskFileItem("originFile", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length(), file.getParentFile());
             InputStream input = new FileInputStream(file);
             OutputStream os = fileItem.getOutputStream();
@@ -108,7 +115,9 @@ public class FileService {
     private Boolean uploadObject(MultipartFile file, String userNickName, String youtubeUrl) throws IOException {
         String bucketName = "sdgl-files-bucket";
 
-        String localSavedPath = System.getProperty("user.dir") + "\\upload";
+//        String localSavedPath = System.getProperty("user.dir") + "\\upload";
+        String localSavedPath = "/var/lib/nginx/tmp/client_body/";
+//        String localSavedPath = System.getProperty("user.dir") + "\\upload";
 
         String originName = file.getOriginalFilename();
 
@@ -173,10 +182,13 @@ public class FileService {
 
 //        String key = "asd/output_files/e93afd8c-0bc1-4f95-8431-58ccce810dc4_eSIM_clip.mp3.txt";
         String key = userNickName + "/output_files/" + transcribeName + ".txt";
+        String key2 = userNickName + "/output_files/" + transcribeName + "_summary" + ".txt";
 
         S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
+        S3Object fullObject2 = null;
 
         StringBuilder sb = new StringBuilder("");
+        StringBuilder sb2 = new StringBuilder("");
 
         try {
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
@@ -185,16 +197,18 @@ public class FileService {
 
             System.out.println("Downloading an object");
             fullObject = s3Client.getObject(new GetObjectRequest(bucketName, key));
-//            System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
-//            System.out.println("Content: ");
+            fullObject2 = s3Client.getObject(new GetObjectRequest(bucketName, key2));
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(fullObject.getObjectContent(), "utf-8"));
+            BufferedReader reader2 = new BufferedReader(new InputStreamReader(fullObject2.getObjectContent(), "utf-8"));
 
             String line = null;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-                System.out.println(line);
                 sb.append(line).append("\n");
+            }
+            String line2 = null;
+            while ((line2 = reader2.readLine()) != null) {
+                sb2.append(line2).append("\n");
             }
 
 
@@ -220,6 +234,7 @@ public class FileService {
         }
         FileDto.FileResultRes res = new FileDto.FileResultRes();
         res.setScript(sb.toString());
+        res.setSummary(sb2.toString());
         res.setYoutubeUrl(videoUrl);
 
         return res;
