@@ -11,6 +11,8 @@ import Container from '../components/Container';
 import Wrapper from '../components/Wrapper';
 import Lottie from '../components/Lottie';
 import '../style/FileResultPage.scss';
+import { Editor } from "@toast-ui/react-editor";
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 export const FileResultPage = () => {
   const loaction = useLocation();
@@ -21,6 +23,7 @@ export const FileResultPage = () => {
   const [fileResult, setFileResult] = useState();
   const [fileSummary, setFileSummary] = useState();
   const [videoUrl, setVideoUrl] = useState();
+  const [viewStatus, setViewStatus] = useState(0)
 
   useEffect(() => {
     /* 상세 파일 데이터 요청 */
@@ -37,18 +40,29 @@ export const FileResultPage = () => {
     });
   }, []);
 
+  const toggleView = () => {
+    console.log(viewStatus);
+    setViewStatus(viewStatus^1);
+  }
+
   return (
     <>
-      <Header />
       <Container>
         <Wrapper>
           <div className="fileResultContainer">
-            <h1>결과물</h1>
             {isPending ? (
               <>
-                <div>{fileTitle}</div>
-                <div className="fileResultContent" style={{whiteSpace : "pre-wrap"}}>{fileResult}</div>
-                <div style={{whiteSpace : "pre-wrap"}}>{fileSummary}</div>
+              <h1 style={{marginTop: "7%"}}>{fileTitle}</h1>
+              <div style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "20px",
+                marginTop: "30px"
+                }}>
+                  
+                <div onClick={() => toggleView()} style={{cursor:"pointer"}}>{!viewStatus ? "요약보기": "대본보기"}</div>
+              </div>
+              {!viewStatus ? <div className="fileResultContent" style={{whiteSpace : "pre-wrap", overflow:"auto", width:"100%", height:"70vh"}}><div style={{width:"90%", margin:"auto"}}>{fileResult}</div></div>:<div style={{whiteSpace : "pre-wrap", overflow:"auto", width:"100%", height:"70vh"}}><div style={{width:"90%", margin:"auto"}}>{fileSummary}</div></div>}
                 <div
                   style={{
                     position: 'fixed',
@@ -66,6 +80,7 @@ export const FileResultPage = () => {
               </>
             ) : (
               <>
+                <Header/>
                 <p>결과를 불러오고 있어요!</p>
                 <div style={{ maxWidth: '70%', display: 'flex', margin: 'auto' }}>
                   <LoadingLottie />
