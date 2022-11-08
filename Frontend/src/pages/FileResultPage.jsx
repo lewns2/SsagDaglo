@@ -19,6 +19,7 @@ export const FileResultPage = () => {
   const [fileTitle, setFileTitle] = useState();
   const [isPending, setIsPending] = useState(false);
   const [fileResult, setFileResult] = useState();
+  const [fileSummary, setFileSummary] = useState();
   const [videoUrl, setVideoUrl] = useState();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export const FileResultPage = () => {
       console.log(res);
       setIsPending(true);
       setFileResult(res.data.script);
+      setFileSummary(res.data.summary);
       setVideoUrl(res.data.youtubeUrl);
     });
   }, []);
@@ -45,7 +47,8 @@ export const FileResultPage = () => {
             {isPending ? (
               <>
                 <div>{fileTitle}</div>
-                <div className="fileResultContent">{fileResult}</div>
+                <div className="fileResultContent" style={{whiteSpace : "pre-wrap"}}>{fileResult}</div>
+                <div style={{whiteSpace : "pre-wrap"}}>{fileSummary}</div>
                 <div
                   style={{
                     position: 'fixed',

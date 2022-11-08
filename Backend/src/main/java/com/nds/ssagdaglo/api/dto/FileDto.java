@@ -31,6 +31,7 @@ public class FileDto {
     @Data
     public static class FileResultRes {
         String script;
+        String summary;
         String youtubeUrl;
     }
 
