@@ -8,11 +8,12 @@ import * as useFetchUser from '../apis/FetchUser';
 import Alert from '../components/Alert';
 
 import '../style/UserForm.scss';
+import Container from "../components/Container";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
 
-  const [isSuccessLogin, setIsSuccessLogin] = useState('false');
+  const [isSuccessLogin, setIsSuccessLogin] = useState();
   const {
     register,
     handleSubmit,
@@ -23,17 +24,15 @@ export const LoginPage = () => {
   const onSubmit = (data) => {
     let response = useFetchUser.reqLogin(data);
     response.then((res) => {
-      console.log(`${res}`);
-      {
-        setIsSuccessLogin(`${res}`);
-      }
-      `${res}` === 'false' ? Alert(false, '실패') : Alert(true, '성공');
+      console.log(res);
+      setIsSuccessLogin(res);
+      `${res}` === 'error' ? Alert(false, '실패') : Alert(true, '성공');
     });
   };
 
   // [기능 2] 로그인 완료 시, 파일 리스트 목록으로 이동
   useEffect(() => {
-    if (isSuccessLogin !== 'false') {
+    if (isSuccessLogin && isSuccessLogin !== 'error') {
       navigate('/list');
     }
   }, [isSuccessLogin]);
@@ -42,7 +41,6 @@ export const LoginPage = () => {
     <>
       <Header />
       <ContentHeader />
-
       <div className="UserForm">
         <div className="UserFormSubTitle1">환영합니다!</div>
 
@@ -53,6 +51,7 @@ export const LoginPage = () => {
               className="UserInputText"
               id="email"
               type="text"
+              style={{width:"100%"}}
               placeholder="ssagdaglo@naver.com"
               {...register('userEmail')}
             />
@@ -64,17 +63,10 @@ export const LoginPage = () => {
               className="UserInputText"
               id="password"
               type="password"
+              style={{width:"100%"}}
               placeholder="8자리 이상 입력해주세요"
               {...register('userPassword')}
             />
-          </div>
-          <div className="FindUserInfo">
-            <p className="underline-hover-btn" style={{ cursor: 'pointer' }}>
-              아이디 찾기
-            </p>
-            <p className="underline-hover-btn" style={{ cursor: 'pointer' }}>
-              비밀번호 찾기
-            </p>
           </div>
 
           <button type="submit" className="UserFormSubmitBtn">

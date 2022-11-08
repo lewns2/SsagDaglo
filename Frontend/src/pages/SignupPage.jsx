@@ -75,14 +75,14 @@ export const SignupPage = () => {
 
     return (
         <>  
-            <Header/>
+            {/* <Header/> */}
             <ContentHeader/>
 
             <div className="UserForm">
             <div className="UserFormSubTitle">회원 정보 입력</div>
 
             <form className='UserFormWrapper' onSubmit={handleSubmit(onSubmit)}>
-                <div className='UserInputWrapper'>
+                <div className='UserInputWrapper' style={errors.userNickName ? {marginBottom:"0%"} : {}}>
                     <label id="Top3">닉네임</label>
                     <input className='UserInputText' id="userNickName" {...register("userNickName", {
                         required: { 
@@ -99,7 +99,8 @@ export const SignupPage = () => {
                 </div>
                 {errors.userNickName && (<div className="error">{errors.userNickName.message}</div>)}
                 
-                <div className='UserInputWrapper'>
+                
+                <div className='UserInputWrapper' style={errors.userEmail ? {marginBottom:"0%"} : {}}>
                     <label id="Top3">이메일</label>
                     <input className='UserInputText' {...register("userEmail", {
                             required: { 
@@ -117,7 +118,7 @@ export const SignupPage = () => {
                 </div>
                 {errors.userEmail && (<div className="error">{errors.userEmail.message}</div>)}
                 
-                <div className='UserInputWrapper'>
+                <div className='UserInputWrapper' style={errors.userPassword ? {marginBottom:"0%"} : {}}>
                     <label id="Top3">비밀번호</label>
                     <input className='UserInputText' type='password' {...register("userPassword", {
                         required: { 
@@ -128,7 +129,7 @@ export const SignupPage = () => {
                 </div>
                 {errors.userPassword && (<div className="error">{errors.userPassword.message}</div>)}
 
-                <div className='UserInputWrapper'>
+                <div className='UserInputWrapper' >
                     <label id="Top3">비밀번호 확인</label>
                     <input className='UserInputText' type='password' placeholder="비밀번호 확인" />
                 </div>
