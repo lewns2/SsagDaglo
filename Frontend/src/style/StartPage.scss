@@ -15,15 +15,18 @@
 
 .servicestart {
     
-    display: flex;
-    justify-content: center;
+    width: 125px;
+    height: 50px;
+    border-radius: 20px;
+    font-size: 16px;
+    background-color: #FFF0EF;
+    border: 1px solid #FFF0EF;
+    text-align: center;
+    cursor: pointer;
+    margin: auto;
+    text-align: center;
 
     #startBtn {
-        font-size: 16px;
-        background-color: #FFF0EF;;
-        border: 1px solid #FFF0EF;;
-        border-radius: 8px;
-        text-align: center;
-        cursor: pointer;
+        
     }
 }

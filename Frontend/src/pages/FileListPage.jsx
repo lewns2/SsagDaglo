@@ -133,7 +133,7 @@ export const FileListPage = () => {
                       )}
                     </td>
                     <td>
-                      <button onClick={() => moveToResult(file[3], file[0])}>보기</button>
+                      <div className="resultBtn" onClick={() => moveToResult(file[3], file[0])}>보기</div>
                     </td>
                   </tr>
                 ))}

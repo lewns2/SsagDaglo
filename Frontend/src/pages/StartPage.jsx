@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Container from '../components/Container';
 import '../style/StartPage.scss'
+import Lottie from '../components/Lottie';
 
 export const StartPage = () => {
     const navigate = useNavigate();
@@ -24,7 +25,9 @@ export const StartPage = () => {
                         더욱 중요한 업무에 집중하세요
                     </p>
                 </div>
-
+                <div style={{ maxWidth: '30%', display: 'flex', margin: 'auto' }}>
+                    <StartLottie/>
+                </div>
                 <div className="servicestart">
                     <p onClick={() => navigate('/list')} id="startBtn">시작하기</p>
                 </div>
@@ -34,3 +37,7 @@ export const StartPage = () => {
 }
 
 export default StartPage;
+
+const StartLottie = (props) => (
+    <Lottie {...props} src="https://assets2.lottiefiles.com/packages/lf20_1cazwtnc.json" />
+  );

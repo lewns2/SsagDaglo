@@ -79,28 +79,31 @@
 }
 .board-table th {
   text-align: center;
-  
 }
 
 .board-table .th-num {
-  width: 80px;
+  width: 10%;
   text-align: center;
 }
 
 .board-table .th-title {
-  width: 200px;
+  width: 35%;
   text-align: center;
 }
 .board-table .th-date {
-  width: 150px;
+  width: 20%;
 }
 .board-table .th-status {
-  width: 150px;
+  width: 25%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   gap: 5px;
+  margin: auto;
+}
+.board-table .th-result {
+  width: 10%;
 }
 
 
@@ -108,6 +111,30 @@
 .board-table th,
 .board-table td {
   padding: 14px 0;
+
+  .resultBtn {
+    width: 50px;
+    height: 20px;
+    margin: auto;
+    color: #ffa8a8;
+    font-weight: bold;
+    background: linear-gradient(to right, rgba(178, 135, 111, 0) 25%, #ffa8a8 75%);
+    background-position: 1% 50%;
+    background-size: 400% 300%;
+    border: 1px solid #ffa8a8;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:hover{
+        color: white;
+        color: #fff;
+        background-position: 99% 50%;
+    }
+    
+    #innerfont {
+        font-family: 'RIDIBatang';
+    }
+  }
 }
 
 .board-table tbody td {
@@ -125,3 +152,6 @@
 .board-table tbody th p {
   display: none;
 }
+
+
+
