@@ -69,7 +69,7 @@ export const FileListPage = () => {
       <Container>
         <Wrapper>
           <div className="FileListHeader">
-            <p>파일 목록</p>
+            <h2>파일 목록</h2>
           </div>
 
           {/* 파일 업로드 및 새로고침 */}

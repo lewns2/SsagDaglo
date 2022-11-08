@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const baseURL = 'http://localhost:8080';
-const baseURL = 'https://api.ssagdaglo.cf';
+const baseURL = 'http://localhost:8080';
+// const baseURL = 'https://api.ssagdaglo.cf';
 
 // 1. 회원 가입 요청 API
 const reqSignup = async (data) => {
@@ -24,9 +24,10 @@ const reqLogin = async (data) => {
   try {
     let result;
     await axios.post(`${baseURL}/user/login`, data).then((res) => {
-      result = res.data;
+      console.log(res.data);
+      result = res.data.status;
       if (res.data.status === 'sucess') {
-        sessionStorage.setItem('userNickName', result.data);
+        sessionStorage.setItem('userNickName', res.data.data);
       }
     });
     return result;

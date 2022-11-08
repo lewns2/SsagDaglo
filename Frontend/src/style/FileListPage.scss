@@ -91,7 +91,11 @@
   width: 200px;
   text-align: center;
 }
+.board-table .th-date {
+  width: 150px;
+}
 .board-table .th-status {
+  width: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,9 +103,7 @@
   gap: 5px;
 }
 
-.board-table .th-date {
-  width: 150px;
-}
+
 
 .board-table th,
 .board-table td {
