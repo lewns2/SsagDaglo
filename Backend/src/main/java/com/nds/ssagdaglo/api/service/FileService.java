@@ -68,7 +68,8 @@ public class FileService {
     // 사용자별 upload 폴더 생성 + 파일 저장
     public Boolean localFileSave(MultipartFile file, String userNickName) throws IOException {
 //        String savedPath = System.getProperty("user.dir") + "\\upload";
-        String savedPath = "/var/app/current";
+//        String savedPath = "/var/app/current";
+        String savedPath = "~/upload";
         System.out.println(savedPath);
         System.out.println(savedPath);
         System.out.println(savedPath);
@@ -84,13 +85,15 @@ public class FileService {
             String userNickName = address.get(1);
             String title = getValidFileName(address.get(2));
             String youtubeUrl = address.get(3);
-            String savedPath = "/var/app/current";
+//            String savedPath = "/var/app/current";
+            String savedPath = "~/upload";
 
-            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-//            FileOutputStream fos = new FileOutputStream(System.getProperty("user.dir") + "\\upload/" + title +".mp4"); //다운받을 경로 설정
-            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);  // 처음부터 끝까지 다운로드
-            fos.close();
+            Process process = Runtime.getRuntime().exec("./youtube.sh " + youtubeUrl + " " + title + ".mp4");
+
+//            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+//            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
+//            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);  // 처음부터 끝까지 다운로드
+//            fos.close();
 
             System.out.println("파일 다운완료");
 //            File file = new File(System.getProperty("user.dir") + "\\upload/" + title +".mp4");
@@ -113,7 +116,8 @@ public class FileService {
         String bucketName = "sdgl-files-bucket";
 
 //        String localSavedPath = System.getProperty("user.dir") + "\\upload";
-        String localSavedPath = "/var/app/current";
+//        String localSavedPath = "/var/app/current";
+        String localSavedPath = "~/upload";
 
         String originName = file.getOriginalFilename();
 
