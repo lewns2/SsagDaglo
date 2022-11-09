@@ -94,9 +94,12 @@ public class FileService {
             System.out.println(resource);
             System.out.println(resource);
             System.out.println(resource);
-            Runtime.getRuntime().exec("/bin/sh -c 'wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh'");
-            Runtime.getRuntime().exec("/bin/sh -c 'chmod u+x youtube.sh'");
-            Runtime.getRuntime().exec( "/bin/sh -c 'bash youtube.sh " + youtubeUrl + " " + title + ".mp4'");
+//             Runtime.getRuntime().exec("/bin/sh -c 'wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh'");
+//             Runtime.getRuntime().exec("/bin/sh -c 'chmod u+x youtube.sh'");
+//             Runtime.getRuntime().exec( "/bin/sh -c 'bash youtube.sh " + youtubeUrl + " " + title + ".mp4'");
+            youtubeDL("/bin/sh -c 'wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh'");
+            youtubeDL("/bin/sh -c 'chmod u+x youtube.sh'");
+            youtubeDL("/bin/sh -c 'bash youtube.sh " + youtubeUrl + " " + title + ".mp4'");
 
 //            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 //            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
@@ -117,6 +120,29 @@ public class FileService {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    private static void youtubeDL(String cmd) {
+        try {
+            // Run script
+//            Process process = Runtime.getRuntime().exec("echo test!!!!");
+            Process process = Runtime.getRuntime().exec(cmd);
+
+            // Read output
+            StringBuilder output = new StringBuilder();
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line);
+            }
+
+            System.out.println(output.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // S3 업로드 함수
