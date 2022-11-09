@@ -9,6 +9,7 @@ import com.nds.ssagdaglo.db.repository.FileRepository;
 import com.nds.ssagdaglo.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -88,7 +89,12 @@ public class FileService {
 //            String savedPath = "/var/app/current";
             String savedPath = "~/upload";
 
-            Process process = Runtime.getRuntime().exec("./youtube.sh " + youtubeUrl + " " + title + ".mp4");
+            String resource = new ClassPathResource("youtube.sh").getPath();
+            System.out.println(resource);
+            System.out.println(resource);
+            System.out.println(resource);
+            System.out.println(resource);
+            Process process = Runtime.getRuntime().exec(resource + " " + youtubeUrl + " " + title + ".mp4");
 
 //            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 //            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
