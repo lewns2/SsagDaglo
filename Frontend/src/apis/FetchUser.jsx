@@ -24,7 +24,7 @@ const reqLogin = async (data) => {
   try {
     let result;
     await axios.post(`${baseURL}/user/login`, data).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       result = res.data.status;
       if (res.data.status === 'sucess') {
         sessionStorage.setItem('userNickName', res.data.data);

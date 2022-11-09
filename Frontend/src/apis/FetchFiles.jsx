@@ -25,7 +25,7 @@ const reqFileInfo = async (fileNum) => {
     await axios
       .get(`${baseURL}/file/find/${fileNum}`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         res.data.status === 'sucess' ? (result = res.data) : (result = false);
       })
       .catch((err) => console.log(err));

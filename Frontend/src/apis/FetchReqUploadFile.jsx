@@ -11,7 +11,7 @@ const reqUploadAudio = async (data) => {
 
   try {
     await axios.post(`${baseURL}/file/upload/audio`, data, header).then((res) => {
-      console.log(res);
+      // console.log(res);
       res.data.status === 'sucess' ? (result = true) : (result = false);
     });
 
@@ -28,9 +28,9 @@ const reqUploadLink = async (userNickName, data, title, videoUrl) => {
   let temp = [data, userNickName, title, videoUrl];
 
   try {
-    console.log(temp);
+    // console.log(temp);
     await axios.post(`${baseURL}/file/upload/youtube`, temp).then((res) => {
-      console.log(res);
+      // console.log(res);
       res.data.status === 'sucess' ? (result = true) : (result = false);
     });
 
@@ -44,7 +44,7 @@ const reqUploadLink = async (userNickName, data, title, videoUrl) => {
 // 3. 유튜브 동영상 정보 요청 API
 const reqYoutubeInfos = async (data) => {
   let result = null;
-  console.log(data);
+  // console.log(data);
 
   try {
     await axios

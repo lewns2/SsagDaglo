@@ -23,7 +23,7 @@ export const FileListPage = () => {
     let userNickName = sessionStorage.getItem('userNickName');
     let response = useFetchFiles.reqFiles(userNickName, selectedPage);
     response.then((res) => {
-      console.log(res);
+      // console.log(res);
       setFileList(res.data.fileInfo);
       setTotalPages(res.data.totalPages);
     });
@@ -58,7 +58,7 @@ export const FileListPage = () => {
     let userNickName = sessionStorage.getItem('userNickName');
     let response = useFetchFiles.reqFiles(userNickName, selectedPage);
     response.then((res) => {
-      console.log(res);
+      // console.log(res);
       setFileList(res.data.fileInfo);
     });
   };
