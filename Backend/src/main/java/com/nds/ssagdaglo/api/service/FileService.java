@@ -69,8 +69,8 @@ public class FileService {
     // 사용자별 upload 폴더 생성 + 파일 저장
     public Boolean localFileSave(MultipartFile file, String userNickName) throws IOException {
 //        String savedPath = System.getProperty("user.dir") + "\\upload";
-//        String savedPath = "/var/app/current";
-        String savedPath = "~/upload";
+        String savedPath = "/var/app/current";
+//        String savedPath = "~/upload";
         System.out.println(savedPath);
         System.out.println(savedPath);
         System.out.println(savedPath);
@@ -86,16 +86,14 @@ public class FileService {
             String userNickName = address.get(1);
             String title = getValidFileName(address.get(2));
             String youtubeUrl = address.get(3);
-//            String savedPath = "/var/app/current";
-            String savedPath = "~/upload";
+            String savedPath = "/var/app/current";
+//            String savedPath = "~/upload";
 
             String resource = new ClassPathResource("youtube.sh").getPath();
             System.out.println(resource);
             System.out.println(resource);
             System.out.println(resource);
             System.out.println(resource);
-            Runtime.getRuntime().exec("mkdir ~/upload");
-            Runtime.getRuntime().exec("cd ~/upload");
             Runtime.getRuntime().exec("wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh");
             Runtime.getRuntime().exec("chmod u+x youtube.sh");
             Runtime.getRuntime().exec( "bash youtube.sh " + youtubeUrl + " " + title + ".mp4");
@@ -126,8 +124,8 @@ public class FileService {
         String bucketName = "sdgl-files-bucket";
 
 //        String localSavedPath = System.getProperty("user.dir") + "\\upload";
-//        String localSavedPath = "/var/app/current";
-        String localSavedPath = "~/upload";
+        String localSavedPath = "/var/app/current";
+//        String localSavedPath = "~/upload";
 
         String originName = file.getOriginalFilename();
 
