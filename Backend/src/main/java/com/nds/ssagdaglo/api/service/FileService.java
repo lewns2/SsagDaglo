@@ -89,22 +89,22 @@ public class FileService {
             String savedPath = "/var/app/current";
 //            String savedPath = "~/upload";
 
-            String resource = new ClassPathResource("youtube.sh").getPath();
-            System.out.println(resource);
-            System.out.println(resource);
-            System.out.println(resource);
-            System.out.println(resource);
+//            String resource = new ClassPathResource("youtube.sh").getPath();
+//            System.out.println(resource);
+//            System.out.println(resource);
+//            System.out.println(resource);
+//            System.out.println(resource);
 //             Runtime.getRuntime().exec("/bin/sh -c 'wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh'");
 //             Runtime.getRuntime().exec("/bin/sh -c 'chmod u+x youtube.sh'");
 //             Runtime.getRuntime().exec( "/bin/sh -c 'bash youtube.sh " + youtubeUrl + " " + title + ".mp4'");
-            youtubeDL("/bin/sh -c 'wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh'");
-            youtubeDL("/bin/sh -c 'chmod u+x youtube.sh'");
-            youtubeDL("/bin/sh -c 'bash youtube.sh " + youtubeUrl + " " + title + ".mp4'");
+//            youtubeDL("/bin/sh -c 'wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh'");
+//            youtubeDL("/bin/sh -c 'chmod u+x youtube.sh'");
+//            youtubeDL("/bin/sh -c 'bash youtube.sh " + youtubeUrl + " " + title + ".mp4'");
 
-//            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-//            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
-//            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);  // 처음부터 끝까지 다운로드
-//            fos.close();
+            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);  // 처음부터 끝까지 다운로드
+            fos.close();
 
             System.out.println("파일 다운완료");
 //            File file = new File(System.getProperty("user.dir") + "\\upload/" + title +".mp4");
