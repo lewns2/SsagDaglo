@@ -94,7 +94,11 @@ public class FileService {
             System.out.println(resource);
             System.out.println(resource);
             System.out.println(resource);
-            Process process = Runtime.getRuntime().exec(resource + " " + youtubeUrl + " " + title + ".mp4");
+            Runtime.getRuntime().exec("mkdir ~/upload");
+            Runtime.getRuntime().exec("cd ~/upload");
+            Runtime.getRuntime().exec("wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh");
+            Runtime.getRuntime().exec("chmod u+x youtube.sh");
+            Runtime.getRuntime().exec( "bash youtube.sh " + youtubeUrl + " " + title + ".mp4");
 
 //            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 //            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
