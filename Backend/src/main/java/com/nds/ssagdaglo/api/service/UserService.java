@@ -31,9 +31,6 @@ public class UserService {
     public String signIn(User user) {
         List<User> passwordList = userRepository.findPasswordByUserEmail(user.getUserEmail());
 
-//        System.out.println(passwordList.get(0).getUserPassword());
-//        System.out.println(user.getUserPassword());
-
         try{
             if(passwordList.size() != 1) { // email로 조회한 데이터가 없는경우(없는 사용자)
                 System.out.println("[LOG] 로그인 실패! (존재하지 않는 이메일) - " + user.getUserEmail());

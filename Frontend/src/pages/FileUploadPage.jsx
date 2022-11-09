@@ -66,15 +66,18 @@ export const FileUploadPage = () => {
         }),
       );
       formData.append('file', uploadAudio);
-      for (const keyValue of formData) console.log(keyValue);
+      // for (const keyValue of formData) console.log(keyValue);
       let response = FetchReqUploadFile.reqUploadAudio(formData);
       response.then((res) => {
         setIsAudioPending(true);
         if (res === true) navigate('/list');
+      })
+      .catch((err) => {
+        navigate('/list');
       });
     } else if (selectedUploadType === 'link') {
       /* 유튜브 링크 전송 */
-      console.log(testAudio);
+      // console.log(testAudio);
       let response = FetchReqUploadFile.reqUploadLink(
         sessionStorage.getItem('userNickName'),
         testAudio,
@@ -228,8 +231,10 @@ export const FileUploadPage = () => {
                   </>
                 ) : (
                   <>
-                    <input type="file" accept="audio/*" onChange={onChangeAudio} />
-                    <p>첨부파일은 최대 1개, 30MB까지 등록 가능합니다.</p>
+                  <label for="audioUpload">
+                    첨부파일은 최대 1개, 30MB까지 등록 가능합니다.
+                  </label>
+                  <input id="audioUpload" type="file" accept="audio/*" onChange={onChangeAudio} />
                   </>
                 )}
               </div>
@@ -241,7 +246,7 @@ export const FileUploadPage = () => {
                     placeholder="예) www.youtube.com/watch?v=4VrNZzzOldc"
                     onChange={onChangeLink}
                   />
-                  <button className="youtubeBtn" onClick={() => getVideoID()}>
+                  <button className="youtubeBtn" onClick={() => getVideoID()} style={{cursor:"pointer"}}>
                     링크 등록
                   </button>
                   {/* <button onClick={() => getAudioFromYoutubeLink()}>음성 파일 추출</button> */}
@@ -253,7 +258,7 @@ export const FileUploadPage = () => {
                       {clickNext && isAudioPending === false ? (
                         <>
                           <p>영상을 다운로드 중이예요! 조금만 기다려주세요</p>
-                          <div style={{ maxWidth: '50%', display: 'flex', margin: 'auto' }}>
+                          <div style={{ maxWidth: '40%', display: 'flex', margin: 'auto' }}>
                             <YoutubeLoadingLottie />
                           </div>
                         </>
@@ -264,18 +269,25 @@ export const FileUploadPage = () => {
                               <img
                                 src={youtubeVidInfos.thumbnails ? youtubeVidInfos.thumbnails : ''}
                                 alt="썸네일"
-                                style={{ width: '60%' }}></img>
+                                style={{ width: '100%' }}></img>
                             </div>
+                            <div></div>
                             <div>
                               <p style={{ float: 'left' }}>
+                                <p style={{fontSize: "16px", fontWeight: "bold", marginBottom:"15px"}}>
                                 {youtubeVidInfos.title ? youtubeVidInfos.title : ''}
-                              </p>
-                              <p style={{ float: 'left' }}>
+                                </p>
+                                <p>
                                 {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}
+                                </p>
                               </p>
-                            </div>
+                              
+                              {/* <p style={{ float: 'left' }}>
+                                {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}
+                              </p> */}
+                              </div>
                           </div>
-                          <audio controls src={testAudio}></audio>
+                          <audio controls src={testAudio} style={{height: "40px", width:"50%"}}></audio>
                         </>
                       )}
                     </>

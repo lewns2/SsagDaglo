@@ -29,10 +29,10 @@ export const FileResultPage = () => {
     /* 상세 파일 데이터 요청 */
     setFileNum(loaction.state.id);
     setFileTitle(loaction.state.title);
-    console.log(loaction.state);
+    // console.log(loaction.state);
     let response = useFetchFiles.reqFileInfo(loaction.state.id);
     response.then((res) => {
-      console.log(res);
+      // console.log(res);
       setIsPending(true);
       setFileResult(res.data.script);
       setFileSummary(res.data.summary);
@@ -41,7 +41,7 @@ export const FileResultPage = () => {
   }, []);
 
   const toggleView = () => {
-    console.log(viewStatus);
+    // console.log(viewStatus);
     setViewStatus(viewStatus^1);
   }
 

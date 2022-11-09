@@ -24,9 +24,9 @@ export const LoginPage = () => {
   const onSubmit = (data) => {
     let response = useFetchUser.reqLogin(data);
     response.then((res) => {
-      console.log(res);
+      // console.log(res);
       setIsSuccessLogin(res);
-      `${res}` === 'error' ? Alert(false, '실패') : Alert(true, '성공');
+      `${res}` === 'error' ? Alert(false, '아이디, 비밀번호를 확인해주세요') : Alert(true, '로그인 성공');
     });
   };
 
@@ -64,7 +64,7 @@ export const LoginPage = () => {
               id="password"
               type="password"
               style={{width:"100%"}}
-              placeholder="8자리 이상 입력해주세요"
+              placeholder="비밀번호를 입력해주세요"
               {...register('userPassword')}
             />
           </div>

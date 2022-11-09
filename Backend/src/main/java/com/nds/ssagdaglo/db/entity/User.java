@@ -17,12 +17,6 @@ import java.util.List;
 @ToString
 //@Table
 public class User {
-//    // 기본 생성자 추가
-//    public User(String userEmail, String userNickName, String userPassword) {
-//        this.userEmail = userEmail;
-//        this.userNickName = userNickName;
-//        this.userPassword = userPassword;
-//    }
 
     @Id
     @Email
@@ -44,16 +38,6 @@ public class User {
         return new ArrayList<>();
     }
 
-    // 추가 2022-10-24
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return this.ro
-//    }
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @Override
-//    public String getUserEmail() {
-//        return this.userEmail;
-//    }
 }
 
 

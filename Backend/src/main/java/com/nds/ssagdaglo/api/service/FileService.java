@@ -68,32 +68,32 @@ public class FileService {
     // 사용자별 upload 폴더 생성 + 파일 저장
     public Boolean localFileSave(MultipartFile file, String userNickName) throws IOException {
 //        String savedPath = System.getProperty("user.dir") + "\\upload";
-        String savedPath = "/var/app/current";
+//        String savedPath = "/var/app/current";
+        String savedPath = "~/upload";
         System.out.println(savedPath);
         System.out.println(savedPath);
         System.out.println(savedPath);
         String originName = file.getOriginalFilename();
-//        File Folder = new File(savedPath);
-//        Folder.mkdir();
         file.transferTo(new java.io.File(savedPath + "/" + originName));
         return uploadObject(file, userNickName, null);
     }
 
     // 유튜브 링크를 통해 로컬에 파일 저장
     public Boolean convertAudio(List<String> address) throws IOException {
-//        String address = "https://rr1---sn-n3cgv5qc5oq-bh2l6.googlevideo.com/videoplayback?expire=1667466287&ei=zy9jY-fzHouvkgbj6KG4Ag&ip=66.249.84.29&id=o-AKw4uuWFLbQrchfTk8VuqfP1uuKDO6LX9eaDuQebaIl1&itag=140&source=youtube&requiressl=yes&vprv=1&mime=audio%2Fmp4&ns=Ao1-6Bd2joWLF_T90GRi36cI&gir=yes&clen=2446023&dur=151.092&lmt=1667147110816403&keepalive=yes&fexp=24001373,24007246&c=WEB&txp=5532434&n=-kBmgEEkq1K3-nIxas&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cns%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRAIgU-SfLaQfPOvDAc2ubZFzdV0F3VATxcEIVb8AJL0UWmwCIHI-FEO4AxArL-ZCvg-hgICVel2W_HYlIcd8gUl-X_Py&redirect_counter=1&rm=sn-qxosy7e&req_id=36ec527ef78636e2&cms_redirect=yes&cmsv=e&ipbypass=yes&mh=Jx&mip=203.249.191.10&mm=31&mn=sn-n3cgv5qc5oq-bh2l6&ms=au&mt=1667444038&mv=u&mvi=1&pl=24&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pl&lsig=AG3C_xAwRQIgB4jVq2f4dfG0fTVwQC1QsUIzauUey8XsC8w8fbhmFGcCIQCXcYL1O0sS9kkKUfAKTO2CbKjlYcqEg38D7Re0N--WGw%3D%3D";  // 다운 받을 파일 주소 입력
         try {
             URL url = new URL(address.get(0));
             String userNickName = address.get(1);
             String title = getValidFileName(address.get(2));
             String youtubeUrl = address.get(3);
-            String savedPath = "/var/app/current";
+//            String savedPath = "/var/app/current";
+            String savedPath = "~/upload";
 
-            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-//            FileOutputStream fos = new FileOutputStream(System.getProperty("user.dir") + "\\upload/" + title +".mp4"); //다운받을 경로 설정
-            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);  // 처음부터 끝까지 다운로드
-            fos.close();
+            Process process = Runtime.getRuntime().exec("./youtube.sh " + youtubeUrl + " " + title + ".mp4");
+
+//            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+//            FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
+//            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);  // 처음부터 끝까지 다운로드
+//            fos.close();
 
             System.out.println("파일 다운완료");
 //            File file = new File(System.getProperty("user.dir") + "\\upload/" + title +".mp4");
@@ -116,7 +116,8 @@ public class FileService {
         String bucketName = "sdgl-files-bucket";
 
 //        String localSavedPath = System.getProperty("user.dir") + "\\upload";
-        String localSavedPath = "/var/app/current";
+//        String localSavedPath = "/var/app/current";
+        String localSavedPath = "~/upload";
 
         String originName = file.getOriginalFilename();
 
@@ -166,18 +167,11 @@ public class FileService {
 
     // S3 결과 파일 조회 함수
     public FileDto.FileResultRes getObject(Long fileNum) throws IOException {
-//        String fileObjKeyName = userNickName +"/input_files/" + uuid + originName;
-        /* userNickName + "/output_files/" + uuid + "_" + fileName;
-         파일 번호 -> 유저 이메일 -> 유저 닉네임, uuid 가져오기, 파일이름 가져오기 */
         String bucketName = "sdgl-files-bucket-output";
         FileEntity files = fileRepository.findAllByFileNo(fileNum).get();
         String userNickName = files.getUser().getUserNickName();
         String transcribeName = files.getTranscribe_name();
         String videoUrl = files.getVideoUrl();
-
-        System.out.println("uuid ===== " + files.getUuid());
-        System.out.println("originName ===== " + files.getFilename());
-        System.out.println("userNickName ===== " + files.getUser().getUserNickName());
 
 //        String key = "asd/output_files/e93afd8c-0bc1-4f95-8431-58ccce810dc4_eSIM_clip.mp3.txt";
         String key = userNickName + "/output_files/" + transcribeName + ".txt";

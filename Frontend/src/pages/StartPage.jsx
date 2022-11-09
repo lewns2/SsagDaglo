@@ -9,6 +9,15 @@ import Lottie from '../components/Lottie';
 export const StartPage = () => {
     const navigate = useNavigate();
 
+    const checkLogin = () => {  
+        let userNickName = sessionStorage.getItem('userNickName');
+        if(userNickName) {
+            navigate("/list");
+        }
+        else {
+            navigate("/login");
+        }
+    }
     return (  
         <>
             <Header/>
@@ -29,7 +38,8 @@ export const StartPage = () => {
                     <StartLottie/>
                 </div>
                 <div className="servicestart">
-                    <p onClick={() => navigate('/list')} id="startBtn">시작하기</p>
+                    <p onClick={() => checkLogin()} id="startBtn">시작하기</p>
+                    {/* <p onClick={() => navigate('/list')} id="startBtn">시작하기</p> */}
                 </div>
             </Container>
         </>
