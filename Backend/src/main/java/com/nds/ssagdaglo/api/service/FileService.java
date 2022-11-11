@@ -66,11 +66,29 @@ public class FileService {
     }
 
 
+
+    private void cmdRun(String command) {
+        String s;
+        Process p;
+        try {
+            String[] cmd = {"/bin/bash","-c", command};
+            p = Runtime.getRuntime().exec(cmd);
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            while ((s = br.readLine()) != null)
+                System.out.println(s);
+            p.waitFor();
+            System.out.println("exit: " + p.exitValue());
+            p.destroy();
+        } catch (Exception e) {
+        }
+    }
+
+
     // 사용자별 upload 폴더 생성 + 파일 저장
     public Boolean localFileSave(MultipartFile file, String userNickName) throws IOException {
 //        String savedPath = System.getProperty("user.dir") + "\\upload";
-        String savedPath = "/var/app/current";
-//        String savedPath = "~/upload";
+//        String savedPath = "/var/app/current";
+        String savedPath = "~/upload";
         System.out.println(savedPath);
         System.out.println(savedPath);
         System.out.println(savedPath);
@@ -86,7 +104,11 @@ public class FileService {
             String userNickName = address.get(1);
             String title = getValidFileName(address.get(2));
             String youtubeUrl = address.get(3);
-            String savedPath = "/var/app/current";
+//            String savedPath = "/var/app/current";
+            String savedPath = "~/upload";
+
+            cmdRun("mkdir ~/upload; cd ~/upload; wget -N https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh; chmod u+x youtube.sh");
+            cmdRun("cd ~/upload; bash youtube.sh https://www.youtube.com/watch?v=YSsl5-q2BR4 spring_boot.mp4");
 //            String savedPath = "~/upload";
 
 //            String resource = new ClassPathResource("youtube.sh").getPath();
@@ -150,8 +172,8 @@ public class FileService {
         String bucketName = "sdgl-files-bucket";
 
 //        String localSavedPath = System.getProperty("user.dir") + "\\upload";
-        String localSavedPath = "/var/app/current";
-//        String localSavedPath = "~/upload";
+//        String localSavedPath = "/var/app/current";
+        String localSavedPath = "~/upload";
 
         String originName = file.getOriginalFilename();
 
