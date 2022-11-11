@@ -108,7 +108,7 @@ public class FileService {
             String savedPath = "~/upload";
 
             cmdRun("mkdir ~/upload; cd ~/upload; wget -N https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh; chmod u+x youtube.sh");
-            cmdRun("cd ~/upload; bash youtube.sh https://www.youtube.com/watch?v=YSsl5-q2BR4 spring_boot.mp4");
+            cmdRun("cd ~/upload; bash youtube.sh" + youtubeUrl + " " + title + ".mp4");
 //            String savedPath = "~/upload";
 
 //            String resource = new ClassPathResource("youtube.sh").getPath();
