@@ -89,7 +89,7 @@ public class FileService {
     public Boolean localFileSave(MultipartFile file, String userNickName) throws IOException {
 //        String savedPath = System.getProperty("user.dir") + "\\upload";
 //        String savedPath = "/var/app/current";
-        String savedPath = "~/upload";
+        String savedPath = "/home/webapp/upload";
         System.out.println(savedPath);
         System.out.println(savedPath);
         System.out.println(savedPath);
@@ -106,7 +106,7 @@ public class FileService {
             String title = getValidFileName(address.get(2));
             String youtubeUrl = address.get(3);
 //            String savedPath = "/var/app/current";
-            String savedPath = "~/upload";
+            String savedPath = "/home/webapp/upload";
 
             cmdRun("mkdir ~/upload; cd ~/upload; wget -N https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh; chmod u+x youtube.sh");
             cmdRun("cd ~/upload; bash youtube.sh " + youtubeUrl + " '" + title + ".mp4'");
@@ -174,7 +174,7 @@ public class FileService {
 
 //        String localSavedPath = System.getProperty("user.dir") + "\\upload";
 //        String localSavedPath = "/var/app/current";
-        String localSavedPath = "~/upload";
+        String localSavedPath = "/home/webapp/upload";
 
         String originName = file.getOriginalFilename();
 
