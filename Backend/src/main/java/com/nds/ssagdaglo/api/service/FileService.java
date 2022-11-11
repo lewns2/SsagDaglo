@@ -57,7 +57,8 @@ public class FileService {
 
     // 유효한 파일 이름으로 변환
     public static String getValidFileName(String fileName) {
-        String newFileName = fileName.replaceAll("^[0-9a-zA-Z._-]+", "");
+        String tmpFileName = fileName.replaceAll("^[0-9a-zA-Z._-]+", "");
+        String newFileName = tmpFileName.replaceAll(" ", "_");
         System.out.println(newFileName);
         if(newFileName.length()==0)
             throw new IllegalStateException(
