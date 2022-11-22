@@ -1,19 +1,16 @@
 package com.nds.ssagdaglo.api.service;
 
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.model.*;
 import com.nds.ssagdaglo.api.dto.FileDto;
-import com.nds.ssagdaglo.db.entity.FileEntity;
+import com.nds.ssagdaglo.db.entity.File;
 import com.nds.ssagdaglo.db.entity.User;
 import com.nds.ssagdaglo.db.repository.FileRepository;
 import com.nds.ssagdaglo.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
@@ -25,19 +22,14 @@ import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.io.File;
 import java.io.OutputStream;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
-import java.io.File;
-import java.io.OutputStream;
+
 import java.io.FileInputStream;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -87,8 +79,6 @@ public class FileService {
 
     // 사용자별 upload 폴더 생성 + 파일 저장
     public Boolean localFileSave(MultipartFile file, String userNickName) throws IOException {
-//        String savedPath = System.getProperty("user.dir") + "\\upload";
-//        String savedPath = "/var/app/current";
         String savedPath = "/home/webapp/upload";
         System.out.println(savedPath);
         System.out.println(savedPath);
@@ -105,24 +95,10 @@ public class FileService {
             String userNickName = address.get(1);
             String title = getValidFileName(address.get(2));
             String youtubeUrl = address.get(3);
-//            String savedPath = "/var/app/current";
             String savedPath = "/home/webapp/upload";
 
             cmdRun("mkdir ~/upload; cd ~/upload; wget -N https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh; chmod u+x youtube.sh");
             cmdRun("cd ~/upload; bash youtube.sh " + youtubeUrl + " '" + title + ".mp4'");
-//            String savedPath = "~/upload";
-
-//            String resource = new ClassPathResource("youtube.sh").getPath();
-//            System.out.println(resource);
-//            System.out.println(resource);
-//            System.out.println(resource);
-//            System.out.println(resource);
-//             Runtime.getRuntime().exec("/bin/sh -c 'wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh'");
-//             Runtime.getRuntime().exec("/bin/sh -c 'chmod u+x youtube.sh'");
-//             Runtime.getRuntime().exec( "/bin/sh -c 'bash youtube.sh " + youtubeUrl + " " + title + ".mp4'");
-//            youtubeDL("/bin/sh -c 'wget https://raw.githubusercontent.com/Yu-yunjong/uploadStorage/master/youtube.sh'");
-//            youtubeDL("/bin/sh -c 'chmod u+x youtube.sh'");
-//            youtubeDL("/bin/sh -c 'bash youtube.sh " + youtubeUrl + " " + title + ".mp4'");
 
             ReadableByteChannel rbc = Channels.newChannel(url.openStream());
             FileOutputStream fos = new FileOutputStream(savedPath + "/" + title + ".mp4"); //다운받을 경로 설정
@@ -130,8 +106,7 @@ public class FileService {
             fos.close();
 
             System.out.println("파일 다운완료");
-//            File file = new File(System.getProperty("user.dir") + "\\upload/" + title +".mp4");
-            File file = new File(savedPath + "/" + title + ".mp4");
+            java.io.File file = new java.io.File(savedPath + "/" + title + ".mp4");
             FileItem fileItem = new DiskFileItem("originFile", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length(), file.getParentFile());
             InputStream input = new FileInputStream(file);
             OutputStream os = fileItem.getOutputStream();
@@ -192,11 +167,11 @@ public class FileService {
                     .build();
 
             // Upload a file as a new object with ContentType and title specified.
-            PutObjectRequest request = new PutObjectRequest(bucketName, fileObjKeyName, new File(fileName));
+            PutObjectRequest request = new PutObjectRequest(bucketName, fileObjKeyName, new java.io.File(fileName));
             s3Client.putObject(request);
 
             // 파일 정보 엔티티 저장
-            FileEntity fileEntity = FileEntity.builder()
+            File fileEntity = File.builder()
                     .originPath("s3://" + bucketName + "/" + fileObjKeyName) // * S3 url
                     .filename(originName)
                     .uuid(uuid)
@@ -225,8 +200,8 @@ public class FileService {
     // S3 결과 파일 조회 함수
     public FileDto.FileResultRes getObject(Long fileNum) throws IOException {
         String bucketName = "sdgl-files-bucket-output";
-        FileEntity files = fileRepository.findAllByFileNo(fileNum).get();
-        String userNickName = files.getUser().getUserNickName();
+        File files = fileRepository.findAllByFileNo(fileNum).get();
+        String userNickName = files.getUser().getNickName();
         String transcribeName = files.getTranscribe_name();
         String videoUrl = files.getVideoUrl();
 
@@ -296,22 +271,23 @@ public class FileService {
 
         User user = userRepository.findByUserNickName(userNickName).get();
 
-        Page<FileEntity> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail(), pageable);
+//        Page<File> fileEntityRes = fileRepository.findAllByUserUserEmail(user.getUserEmail(), pageable);
+        Page<File> fileEntityRes = fileRepository.findAllByUserEmail(user.getEmail(),pageable);
 
-        List<FileEntity> fileEntityResToList = fileEntityRes.getContent();
+        List<File> fileResToList = fileEntityRes.getContent();
 
         // 전체 페이지 수 넘겨주기
         FileDto.UserFileListRes res = new FileDto.UserFileListRes();
         res.setTotalPages(fileEntityRes.getTotalPages());
 
-        for(int i=0; i<fileEntityResToList.size(); i++) {
+        for(int i = 0; i< fileResToList.size(); i++) {
             List<String> fileInfo = new ArrayList<>();
-            String userFileName = fileEntityResToList.get(i).getFilename();
-            Long userFileNum = fileEntityResToList.get(i).getFileNo();
-            String status = fileEntityResToList.get(i).getStatus();
+            String userFileName = fileResToList.get(i).getFilename();
+            Long userFileNum = fileResToList.get(i).getFileNo();
+            String status = fileResToList.get(i).getStatus();
             fileInfo.add(userFileName);
-            fileInfo.add(String.valueOf(fileEntityResToList.get(i).getCreatedDate()));
-            fileInfo.add(String.valueOf(fileEntityResToList.get(i).getUpdateDate()));
+            fileInfo.add(String.valueOf(fileResToList.get(i).getCreatedDate()));
+            fileInfo.add(String.valueOf(fileResToList.get(i).getUpdateDate()));
             fileInfo.add(String.valueOf(userFileNum));
             fileInfo.add(status);
             data.add(fileInfo);

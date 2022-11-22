@@ -1,16 +1,12 @@
 package com.nds.ssagdaglo.db.entity;
 
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.dialect.JDataStoreDialect;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -18,14 +14,14 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-@Table(name="storage")
-@Entity(name="file")
+//@Table(name="storage")
+@Entity
 @EntityListeners(AuditingEntityListener.class)
-public class FileEntity {
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="no")
+    @Column
     private Long fileNo;
 
     @ManyToOne(fetch = FetchType.LAZY)

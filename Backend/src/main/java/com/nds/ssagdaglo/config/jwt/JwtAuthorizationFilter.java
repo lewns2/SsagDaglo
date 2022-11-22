@@ -50,7 +50,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         if(userEmail != null) {
             System.out.println("username 정상: " + userEmail);
             User userEntity = userRepository.findByUserEmail(userEmail);
-            System.out.println("userEntity: " + userEntity.getUserEmail());
+            System.out.println("userEntity: " + userEntity.getEmail());
 
             PrincipalDetails principalDetails = new PrincipalDetails(userEntity);
 

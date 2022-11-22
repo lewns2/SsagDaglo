@@ -16,9 +16,9 @@ public class UserDto {
 
     public static User toEntity(UserDto body) {
         return User.builder()
-                .userEmail(body.authId)
-                .userPassword(body.getPassword())
-                .userNickName(body.getNickName())
+                .email(body.authId)
+                .password(body.getPassword())
+                .nickName(body.getNickName())
                 .build();
     }
 

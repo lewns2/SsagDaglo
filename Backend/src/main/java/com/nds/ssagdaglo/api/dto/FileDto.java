@@ -1,15 +1,9 @@
 package com.nds.ssagdaglo.api.dto;
 
-import com.nds.ssagdaglo.db.entity.FileEntity;
-import com.nds.ssagdaglo.db.entity.User;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
 
 @Getter
 public class FileDto {

@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             User user = om.readValue(request.getInputStream(), User.class); // User1(id=0, username=user, password=1234, roles=null) 같은 형태로 객체에 담김.
             System.out.println(user);
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserEmail(), user.getUserPassword());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
 
             // PrincipalDetailsService의 loadUserByUsername() 함수가 실행된 후 정상이면, authenticatioin 객체가 session 영역에 저장됨!
             // authentication에 내 로그인 정보가 담김.
@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             // => 로그인이 되었다는 의미!!
             PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            System.out.println("로그인 완료됨! " + principalDetails.getUser().getUserEmail());
+            System.out.println("로그인 완료됨! " + principalDetails.getUser().getEmail());
             // authenticatioin 객체가 session 영역에 저장해야하고, return 해주면 됨.
             // return 하는 이유: 권한 관리를 security가 대신 해주므로, 편하라고 return 함.
             // 굳이 JWT 토큰을 사용하면서 세션을 만들 필요가 없음. 단지 권한 처리때문에 session 넣어줌.
@@ -74,8 +74,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String jwtToken = JWT.create()
                 .withSubject(JwtProperties.HEADER_STRING)
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME)) // 10분(60초 * 10)
-                .withClaim("email", principalDetails.getUser().getUserEmail()) // withClaim 부분엔 내가 리턴하고 싶은 값을 담아주면 됨!
-                .withClaim("nickname", principalDetails.getUser().getUserNickName())
+                .withClaim("email", principalDetails.getUser().getEmail()) // withClaim 부분엔 내가 리턴하고 싶은 값을 담아주면 됨!
+                .withClaim("nickname", principalDetails.getUser().getNickName())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken); // Bearer 다음에 무조건 한칸 띄어야됨!!!!

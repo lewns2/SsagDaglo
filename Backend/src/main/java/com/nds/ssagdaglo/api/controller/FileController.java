@@ -75,7 +75,7 @@ public class FileController {
     @GetMapping("/findAll/{userNickName}")
     public ApiResponse<?> getFileList(@PathVariable String userNickName, @PageableDefault(page=0, size=6, sort = "fileNo", direction = Sort.Direction.DESC) Pageable pagealbe) {
         FileDto.UserFileListRes userFileListRes;
-
+        System.out.println("사용자 파일 목록 조회");
         try {
             userFileListRes = fileService.getUserFileList(userNickName, pagealbe);
         }

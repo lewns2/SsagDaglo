@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 @Data // Getter + Setter
-@Entity(name = "user")
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -20,14 +20,14 @@ public class User {
 
     @Id
     @Email
-    @Column(name = "email", length = 100, nullable = false)
-    private String userEmail;
+    @Column(name="email", length = 100, nullable = false)
+    private String email;
 
-    @Column(name = "nickname", length = 60, nullable = false)
-    private String userNickName;
+    @Column(length = 60, nullable = false)
+    private String nickName;
 
-    @Column(name = "password", length = 200, nullable = false)
-    private String userPassword;
+    @Column(length = 200, nullable = false)
+    private String password;
 
     private String roles; // USER, ADMIN
 
