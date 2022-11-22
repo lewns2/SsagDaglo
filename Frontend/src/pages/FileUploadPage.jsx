@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Header from '../components/Header';
-import * as useFetchAudio from '../apis/FetchAudio';
-import Alert from '../components/Alert';
+/* API 모듈 */
+import * as FetchReqUploadFile from '../apis/FetchReqUploadFile';
 
+/* 공통 컴포넌트 및 스타일 */
+import Header from '../components/Header';
+import Alert from '../components/Alert';
+import Container from '../components/Container';
+import Wrapper from '../components/Wrapper';
+import Lottie from '../components/Lottie';
 import '../style/FileUploadPage.scss';
 
 export const FileUploadPage = () => {
@@ -20,9 +25,13 @@ export const FileUploadPage = () => {
     thumbnails: '',
   });
   const [testAudio, setTestAudio] = useState();
+  const [clickNext, setClickNext] = useState(false);
+  const [isYoutubePeding, setIsYoutubePeding] = useState(false);
+  const [isAudioPending, setIsAudioPending] = useState(false);
 
-  // [UX] 카테고리 선택에 따라 보여줄 화면을 핸들링할 데이터
+  /* [UX] 카테고리 선택에 따라 보여줄 화면을 핸들링할 데이터 */
   const clickTypeButton = (type) => {
+    setClickNext(false);
     if (type === 'file') setSelectedUploadType('file');
     else if (type === 'link') {
       setSelectedUploadType('link');
@@ -31,7 +40,7 @@ export const FileUploadPage = () => {
     }
   };
 
-  // [기능 / UX] 업로드 파일, 변수에 저장 및 음악 재생 기능
+  /* [기능 / UX] 업로드 파일, 변수에 저장 및 음악 재생 기능 */
   const onChangeAudio = (e) => {
     if (e.target.files[0]) {
       setUploadAudio(e.target.files[0]);
@@ -43,18 +52,10 @@ export const FileUploadPage = () => {
     setGivenYoutubeLink(e.target.value);
   };
 
-  const handlePlay = (isPlay) => {
-    let playAudio = new Audio(uploadAudio);
-    if (uploadAudio && isPlay) {
-      playAudio.play();
-    } else {
-      playAudio.pause();
-      playAudio = null;
-    }
-  };
-
-  // [기능] 파일 업로드 후, 요청 시 서버에 보내줄 form 형태 변환 및 API 요청 / [다음] 버튼 클릭
+  /* [기능] 파일 업로드 후, 요청 시 서버에 보내줄 form 형태 변환 및 API 요청 / [다음] 버튼 클릭 */
   const handleRequest = () => {
+    setClickNext(true);
+
     // 음성 파일 업로드
     if (selectedUploadType === 'file') {
       const formData = new FormData();
@@ -65,20 +66,32 @@ export const FileUploadPage = () => {
         }),
       );
       formData.append('file', uploadAudio);
-      for (const keyValue of formData) console.log(keyValue);
-      let response = useFetchAudio.reqUploadAudio(formData);
+      // for (const keyValue of formData) console.log(keyValue);
+      let response = FetchReqUploadFile.reqUploadAudio(formData);
       response.then((res) => {
+        setIsAudioPending(true);
+        if (res === true) navigate('/list');
+      })
+      .catch((err) => {
+        navigate('/list');
+      });
+    } else if (selectedUploadType === 'link') {
+      /* 유튜브 링크 전송 */
+      // console.log(testAudio);
+      let response = FetchReqUploadFile.reqUploadLink(
+        sessionStorage.getItem('userNickName'),
+        testAudio,
+        youtubeVidInfos.title,
+        givenYoutubeLink,
+      );
+      response.then((res) => {
+        setIsYoutubePeding(true);
         if (res === true) navigate('/list');
       });
     }
-
-    // 유튜브 링크 전송
-    else if (selectedUploadType === 'link') {
-      //   console.log(givenYoutubeLink);
-    }
   };
 
-  // [기능] 유튜브 url 중 video id 파싱 및 api 요청
+  /* [기능] 유튜브 url 중 video id 파싱 및 api 요청 */
   const getVideoID = () => {
     if (!givenYoutubeLink) {
       Alert(false, '비디오 링크를 입력해주세요!');
@@ -87,7 +100,7 @@ export const FileUploadPage = () => {
       if (url[2] !== undefined) {
         url = url[2].split(/[^0-9a-z_-]/i)[0];
 
-        let response = useFetchAudio.reqYoutubeInfos(url);
+        let response = FetchReqUploadFile.reqYoutubeInfos(url);
         response.then((res) => {
           //   console.log(res);
           setYoutubeVidInfos({
@@ -103,6 +116,7 @@ export const FileUploadPage = () => {
     getAudioFromYoutubeLink();
   };
 
+  /* 유튜브 링크를 통해 오디오 파일 추출 */
   const getAudioFromYoutubeLink = () => {
     fetch(
       'https://images' +
@@ -185,87 +199,129 @@ export const FileUploadPage = () => {
     });
   };
 
-  useEffect(() => {
-    // console.log(givenYoutubeLink);
-  }, [selectedUploadType, uploadAudio, givenYoutubeLink, youtubeVidInfos]);
+  useEffect(() => {}, [selectedUploadType, uploadAudio, givenYoutubeLink, youtubeVidInfos]);
 
   return (
     <>
       <Header />
-      <div className="FileUploadContainer">
-        {/* 업로드 타입 선택 카테고리 */}
-        <h1>파일 업로드</h1>
-        <div className="uploadType">
-          <div>
-            <p onClick={() => clickTypeButton('file')}>파일 업로드</p>
-          </div>
-          <div>
-            <p onClick={() => clickTypeButton('link')}>유튜브 링크</p>
-          </div>
-        </div>
-
-        {/* 타입에 알맞은 파일 업로드 방법 */}
-        <div className="uploadObject">
-          {selectedUploadType === 'file' ? (
-            <div className="audioFile">
-              <input type="file" accept="audio/*" onChange={onChangeAudio} />
-
-              <div className="audioController" style={{ display: isVisible ? '' : 'none' }}>
-                <button onClick={() => handlePlay(true)}>Play</button>
-                <button onClick={() => handlePlay(false)}>Pause</button>
-              </div>
-              <p>첨부파일은 최대 1개, 30MB까지 등록 가능합니다.</p>
+      <Container>
+        <Wrapper>
+          {/* 업로드 타입 선택 카테고리 */}
+          <div className="uploadType">
+            <div>
+              <p style={{ cursor: 'pointer' }} onClick={() => clickTypeButton('file')}>
+                파일 업로드
+              </p>
             </div>
-          ) : (
-            <>
-              <div className="youtubeLinkWrapper">
-                <input
-                  className="youtubeInput"
-                  placeholder="예) www.youtube.com/watch?v=4VrNZzzOldc"
-                  onChange={onChangeLink}
-                />
-                <button className="youtubeBtn" onClick={() => getVideoID()}>
-                  링크 등록
-                </button>
-                {/* <button onClick={() => getAudioFromYoutubeLink()}>음성 파일 추출</button> */}
-              </div>
+            <div>
+              <p style={{ cursor: 'pointer' }} onClick={() => clickTypeButton('link')}>
+                유튜브 링크
+              </p>
+            </div>
+          </div>
 
-              <div className="youtubeResult">
-                {youtubeVidInfos.title !== '' ? (
+          {/* 타입에 알맞은 파일 업로드 방법 */}
+          <div className="uploadObject">
+            {selectedUploadType === 'file' ? (
+              <div className="audioFile">
+                {clickNext && isAudioPending === false ? (
                   <>
-                    <div>
-                      <img
-                        src={youtubeVidInfos.thumbnails ? youtubeVidInfos.thumbnails : ''}
-                        alt="썸네일"></img>
-                    </div>
-                    <div>
-                      <p>제목 : {youtubeVidInfos.title ? youtubeVidInfos.title : ''}</p>
-                      <p>
-                        작성자 : {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}
-                      </p>
-                    </div>
-                    <audio controls src={testAudio}></audio>
+                    파일을 처리하고 있어요! 조금만 기다려주세요
+                    <AudioLoadingLottie />
                   </>
                 ) : (
-                  <div></div>
+                  <>
+                  <label for="audioUpload">
+                    첨부파일은 최대 1개, 30MB까지 등록 가능합니다.
+                  </label>
+                  <input id="audioUpload" type="file" accept="audio/*" onChange={onChangeAudio} />
+                  </>
                 )}
               </div>
-            </>
-          )}
-        </div>
+            ) : (
+              <>
+                <div className="youtubeLinkWrapper">
+                  <input
+                    className="youtubeInput"
+                    placeholder="예) www.youtube.com/watch?v=4VrNZzzOldc"
+                    onChange={onChangeLink}
+                  />
+                  <button className="youtubeBtn" onClick={() => getVideoID()} style={{cursor:"pointer"}}>
+                    링크 등록
+                  </button>
+                  {/* <button onClick={() => getAudioFromYoutubeLink()}>음성 파일 추출</button> */}
+                </div>
 
-        {/* 업로드가 성공적인 경우를 확인하고, 다음 버튼 활성화 */}
-        <div className="moveButtons">
-          <p onClick={() => navigate(-1)} style={{ cursor: 'pointer' }}>
-            이전
-          </p>
-          <p onClick={() => handleRequest()} style={{ cursor: 'pointer' }}>
-            다음
-          </p>
-        </div>
-      </div>
+                <div className="youtubeResult">
+                  {youtubeVidInfos.title !== '' ? (
+                    <>
+                      {clickNext && isAudioPending === false ? (
+                        <>
+                          <p>영상을 다운로드 중이예요! 조금만 기다려주세요</p>
+                          <div style={{ maxWidth: '40%', display: 'flex', margin: 'auto' }}>
+                            <YoutubeLoadingLottie />
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="youtubeInfos">
+                            <div>
+                              <img
+                                src={youtubeVidInfos.thumbnails ? youtubeVidInfos.thumbnails : ''}
+                                alt="썸네일"
+                                style={{ width: '100%' }}></img>
+                            </div>
+                            <div></div>
+                            <div>
+                              <p style={{ float: 'left' }}>
+                                <p style={{fontSize: "16px", fontWeight: "bold", marginBottom:"15px"}}>
+                                {youtubeVidInfos.title ? youtubeVidInfos.title : ''}
+                                </p>
+                                <p>
+                                {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}
+                                </p>
+                              </p>
+                              
+                              {/* <p style={{ float: 'left' }}>
+                                {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}
+                              </p> */}
+                              </div>
+                          </div>
+                          <audio controls src={testAudio} style={{height: "40px", width:"50%"}}></audio>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* 업로드가 성공적인 경우를 확인하고, 다음 버튼 활성화 */}
+          <div className="moveButtonsWrapper">
+            <div className="moveButtons">
+              <p onClick={() => navigate(-1)} style={{ cursor: 'pointer' }}>
+                이전
+              </p>
+              <p onClick={() => handleRequest()} style={{ cursor: 'pointer' }}>
+                다음
+              </p>
+            </div>
+          </div>
+        </Wrapper>
+      </Container>
     </>
   );
 };
+
+const YoutubeLoadingLottie = (props) => (
+  <Lottie {...props} src="https://assets4.lottiefiles.com/packages/lf20_qe6rfoqh.json" />
+);
+
+const AudioLoadingLottie = (props) => (
+  <Lottie {...props} src="https://assets4.lottiefiles.com/private_files/lf30_fup2uejx.json" />
+);
 
 export default FileUploadPage;

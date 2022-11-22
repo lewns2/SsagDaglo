@@ -15,46 +15,74 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 @CrossOrigin(origins="*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/file")
 public class FileController {
 
     private final FileService fileService;
 
-    // 파일 업로드
-    @CrossOrigin(origins="*", allowedHeaders = "*")
-    @PostMapping("/upload")
+    // S3 파일 업로드 - 오디오 파일
+    @PostMapping("/upload/audio")
     public ApiResponse<?> uploadFile(@RequestPart(value = "key")FileDto.FileResisterReq userNickname, @RequestPart("file") MultipartFile file) throws IOException {
-        System.out.println(userNickname.getUserNickname());
-        String[] name = new String[]{"Kim","Park","Yi"};
-
+        Boolean isSuccess;
         try {
-            fileService.saveFile(file, userNickname.getUserNickname());
-//            fileService.uploadObject(file);
+            isSuccess = fileService.localFileSave(file, userNickname.getUserNickname());
         }
         catch (Exception e) {
             e.printStackTrace();
             return ApiResponse.createError("파일 업로드 중 문제가 발생했습니다.");
         }
 
-        return ApiResponse.createSuccessWithNoContent();
+        return (isSuccess ? ApiResponse.createSuccessWithNoContent() : ApiResponse.createError("파일 업로드 중 문제가 발생했습니다."));
+    }
+
+    // S3 파일 업로드 - 유튜브 링크
+    @PostMapping("/upload/youtube")
+    public ApiResponse<?> uploadLink(@RequestBody List<String> link) throws IOException {
+        Boolean isSuccess;
+        try {
+            isSuccess = fileService.convertAudio(link);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ApiResponse.createError("파일 업로드 중 문제가 발생했습니다.");
+        }
+        return (isSuccess ? ApiResponse.createSuccessWithNoContent() : ApiResponse.createError("파일 업로드 중 문제가 발생했습니다."));
+    }
+
+
+    // S3 파일 조회
+    @GetMapping("/find/{fileNum}")
+    public ApiResponse<?> getFile(@PathVariable(name = "fileNum") Long fileNum) throws IOException {
+        FileDto.FileResultRes fileResultRes;
+        try {
+            fileResultRes = fileService.getObject(fileNum);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return ApiResponse.createError("파일 결과 조회 중 문제가 발생했습니다.");
+        }
+        return ApiResponse.createSuccess(fileResultRes);
     }
 
     // 특정 유저의 파일 목록 조회 + 페이징 처리
-    @GetMapping("/list/findAll/{userNickName}")
-    public ApiResponse<?> getFileList(@PathVariable String userNickName, @PageableDefault(page=0, size=5, sort = "no", direction = Sort.Direction.DESC) Pageable pagealbe) {
-        List<?> resData;
+    @GetMapping("/findAll/{userNickName}")
+    public ApiResponse<?> getFileList(@PathVariable String userNickName, @PageableDefault(page=0, size=6, sort = "fileNo", direction = Sort.Direction.DESC) Pageable pagealbe) {
+        FileDto.UserFileListRes userFileListRes;
 
         try {
-            resData = fileService.getUserFileList(userNickName, pagealbe);
+            userFileListRes = fileService.getUserFileList(userNickName, pagealbe);
         }
         catch (Exception e) {
             e.printStackTrace();
             return ApiResponse.createError("파일 목록 조회 중 문제가 발생했습니다.");
         }
-        return ApiResponse.createSuccess(resData);
+        return ApiResponse.createSuccess(userFileListRes);
     }
 }

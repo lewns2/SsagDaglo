@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-@EntityListeners(AuditingEntityListener.class)
 @Table(name="storage")
 @Entity(name="file")
+@EntityListeners(AuditingEntityListener.class)
 public class FileEntity {
 
     @Id
@@ -46,6 +46,18 @@ public class FileEntity {
 
     @Column
     private String outputFilename;
+
+    @Column
+    private String uuid;
+
+    @Column
+    private String transcribe_name;
+
+    @Column
+    private String status;
+
+    @Column
+    private String videoUrl;
 
     @CreatedDate
     private LocalDate createdDate;

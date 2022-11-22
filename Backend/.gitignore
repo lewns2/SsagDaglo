@@ -26,6 +26,9 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+### Upload File Folder ###
+upload/
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
