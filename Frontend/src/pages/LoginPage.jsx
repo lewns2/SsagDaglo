@@ -8,7 +8,6 @@ import * as useFetchUser from '../apis/FetchUser';
 import Alert from '../components/Alert';
 
 import '../style/UserForm.scss';
-import Container from "../components/Container";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -24,7 +23,6 @@ export const LoginPage = () => {
   const onSubmit = (data) => {
     let response = useFetchUser.reqLogin(data);
     response.then((res) => {
-      // console.log(res);
       setIsSuccessLogin(res);
       `${res}` === 'error' ? Alert(false, '아이디, 비밀번호를 확인해주세요') : Alert(true, '로그인 성공');
     });

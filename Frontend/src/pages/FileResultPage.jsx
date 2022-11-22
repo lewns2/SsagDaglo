@@ -11,8 +11,6 @@ import Container from '../components/Container';
 import Wrapper from '../components/Wrapper';
 import Lottie from '../components/Lottie';
 import '../style/FileResultPage.scss';
-import { Editor } from "@toast-ui/react-editor";
-import '@toast-ui/editor/dist/toastui-editor.css';
 
 export const FileResultPage = () => {
   const loaction = useLocation();

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import Header from '../components/Header';
 import ContentHeader from '../components/ContentHeader';
 import * as useFetchUser from '../apis/FetchUser';
 import Alert from '../components/Alert';

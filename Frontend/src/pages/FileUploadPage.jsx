@@ -66,7 +66,6 @@ export const FileUploadPage = () => {
         }),
       );
       formData.append('file', uploadAudio);
-      // for (const keyValue of formData) console.log(keyValue);
       let response = FetchReqUploadFile.reqUploadAudio(formData);
       response.then((res) => {
         setIsAudioPending(true);
@@ -77,7 +76,6 @@ export const FileUploadPage = () => {
       });
     } else if (selectedUploadType === 'link') {
       /* 유튜브 링크 전송 */
-      // console.log(testAudio);
       let response = FetchReqUploadFile.reqUploadLink(
         sessionStorage.getItem('userNickName'),
         testAudio,
@@ -102,7 +100,6 @@ export const FileUploadPage = () => {
 
         let response = FetchReqUploadFile.reqYoutubeInfos(url);
         response.then((res) => {
-          //   console.log(res);
           setYoutubeVidInfos({
             title: res.title,
             channelTitle: res.channelTitle,
@@ -124,7 +121,6 @@ export const FileUploadPage = () => {
         '-focus-opensocial.googleusercontent.com/gadgets/proxy?container=none&url=' +
         encodeURIComponent(givenYoutubeLink),
     ).then((response) => {
-      //   console.log(response);
       var audio_streams = {};
 
       response.text().then((data) => {
@@ -141,8 +137,6 @@ export const FileUploadPage = () => {
 
         var matches = regex.exec(data);
         var data = matches && matches.length > 1 ? JSON.parse(matches[1]) : false;
-
-        // console.log(data);
 
         var streams = [],
           result = {};
@@ -162,7 +156,6 @@ export const FileUploadPage = () => {
         streams.forEach(function (stream, n) {
           var itag = stream.itag * 1,
             quality = false;
-          //   console.log(stream);
           switch (itag) {
             case 139:
               quality = '48kbps';
@@ -188,13 +181,9 @@ export const FileUploadPage = () => {
           if (quality) audio_streams[quality] = stream.url;
         });
 
-        // console.log(audio_streams);
-
         let audioSrc =
           audio_streams['256kbps'] || audio_streams['128kbps'] || audio_streams['48kbps'];
         setTestAudio(audioSrc);
-        // console.log(audioSrc);
-        // audio_tag.play();
       });
     });
   };
@@ -249,7 +238,6 @@ export const FileUploadPage = () => {
                   <button className="youtubeBtn" onClick={() => getVideoID()} style={{cursor:"pointer"}}>
                     링크 등록
                   </button>
-                  {/* <button onClick={() => getAudioFromYoutubeLink()}>음성 파일 추출</button> */}
                 </div>
 
                 <div className="youtubeResult">
@@ -282,9 +270,6 @@ export const FileUploadPage = () => {
                                 </p>
                               </p>
                               
-                              {/* <p style={{ float: 'left' }}>
-                                {youtubeVidInfos.channelTitle ? youtubeVidInfos.channelTitle : ''}
-                              </p> */}
                               </div>
                           </div>
                           <audio controls src={testAudio} style={{height: "40px", width:"50%"}}></audio>
