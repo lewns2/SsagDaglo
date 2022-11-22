@@ -22,7 +22,6 @@ export const StartPage = () => {
         <>
             <Header/>
             <Container>
-
                 <div className="descript">
                     <p id="maintitle">
                         음성을 다 글로 쉽고 빠르게

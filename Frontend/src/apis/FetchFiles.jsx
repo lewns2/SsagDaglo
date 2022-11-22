@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const baseURL = 'http://localhost:8080';
-const baseURL = 'https://api.ssagdaglo.cf';
+const baseURL = 'http://localhost:8080';
+// const baseURL = 'https://api.ssagdaglo.cf';
 
 // 1. 해당 유저 파일 목록 조회
 const reqFiles = async (userNickName, selectedPage) => {
